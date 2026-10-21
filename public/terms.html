@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title data-page-name="Điều khoản sử dụng">Điều khoản sử dụng - AnonyHT</title>
+<link rel="canonical" href="https://anonyht.com/terms.html">
+<meta name="description" content="Điều khoản sử dụng của AnonyHT.">
+<meta name="theme-color" content="#f9f9f8" data-theme-color-dark="#141311">
+<!-- Favicon do admin đặt (Bảng quản trị > Quản lí trang chủ). server/render-html.js
+     điền href từ bảng settings trước khi gửi; giá trị trống hoặc chưa đặt thì bỏ cả thẻ. -->
+<link rel="icon" data-setting-href="favicon">
+<link rel="alternate" type="application/rss+xml" title="ANONYHT" href="/rss.xml">
+<!-- Theme switch. MUST stay here - blocking, in <head>, ahead of the
+     stylesheets - so <html class="dark"> is set before the first paint.
+     Deferring it (or folding it into api.js at the end of <body>) brings back
+     the white flash on every navigation. -->
+<script src="/js/theme.js"></script>
+
+<!-- Fonts. Both families are SELF-HOSTED in /css/fonts.css, which
+     scripts/fetch-fonts.py generates: Inter as the static faces
+     Google serves per unicode-range (latin / latin-ext / vietnamese - the
+     three a page of Vietnamese prose actually selects), Material Symbols as a
+     subset of just the icons in use. Same-origin is the point: the first paint
+     waits on no third party, the faces are discovered while this
+     render-blocking stylesheet parses, and the hashed filenames are what lets
+     server.js serve /fonts/ as immutable for a year.
+     The two font-display values differ because the families fail differently.
+     An icon is a LIGATURE - the markup contains the word "search" and the font
+     turns it into a glyph - so block hides nothing-yet instead of printing the
+     word while the subset arrives. Body text swaps, because its fallback stack
+     is already readable text at the right size.
+     The faces the first paint sets text in are preloaded between the
+     @generated markers below; fetch-fonts.py rewrites their hashed hrefs. -->
+<link href="/css/fonts.css" rel="stylesheet">
+<link href="/css/fonts-pro.css" rel="stylesheet">
+<!-- @font-face alone does not start a download until the layout needs a glyph,
+     which on the icon font means icons stay invisible for an extra round-trip
+     (display:block draws nothing), so the faces the first screen needs are
+     preloaded: the icon subset, plus the body family's 400 in the two
+     unicode-ranges Vietnamese prose is actually set in - latin and vietnamese,
+     which is why two, and why not the 700: body text is the first paint,
+     headings at worst the one after. `crossorigin` is required even
+     same-origin - fonts are always fetched anonymously, and a preload that
+     does not match the mode is simply downloaded twice.
+     The hrefs are hashed and therefore GENERATED - `npm run fetch:fonts`
+     rewrites everything between the markers below. Do not edit them by hand. -->
+<!-- @generated:font-preload -->
+<link as="font" crossorigin href="/fonts/material-symbols-subset.bb57fc90.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin href="/fonts/inter-n-400-latin.3100e775.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin href="/fonts/inter-n-400-vietnamese.5c66f9e0.woff2" rel="preload" type="font/woff2">
+<!-- /@generated:font-preload -->
+
+<!-- Editorial redesign (shared with index.html/post.html/...) - see
+     css/editorial.css. Newsreader is the headline display serif; preloaded
+     here for the same reason as the two Inter faces above. Not
+     @generated - hand-maintained, not part of the shared fetch-fonts.py
+     pipeline. -->
+<link as="font" crossorigin href="/fonts/newsreader-n-400-latin.62981321.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin href="/fonts/newsreader-n-400-vietnamese.f0dcc979.woff2" rel="preload" type="font/woff2">
+
+<!-- Design tokens, then the utilities. tailwind.css is COMPILED (see
+     tailwind.config.js + `npm run build:css`), replacing
+     <script src="https://cdn.tailwindcss.com">, which was not a stylesheet at
+     all but a 451 KB compiler: it parsed the DOM and only then generated and
+     appended a <style>. Until that finished not one utility existed - including
+     `.hidden`, which common.css does not define - so every element the markup
+     had hidden was painted and the page was a bare stack of unstyled text.
+     That is the other half of the flash.
+     Load order is deliberate: the CDN appended its <style> at the END of
+     <head>, after common.css, so keeping tailwind.css last preserves exactly
+     the cascade the pages were built against. -->
+<link href="/css/common.css" rel="stylesheet">
+<link href="/css/tailwind.css" rel="stylesheet">
+<!-- Editorial redesign (shared with the rest of the site) - see the file's
+     own header comment for scope and rationale. -->
+<link href="/css/editorial.css" rel="stylesheet">
+<link href="/css/theme-sky.css" rel="stylesheet">
+<!-- Restrained light/dark look (2026-10-05) - see css/theme-pro.css. Last, so it wins. -->
+<link href="/css/theme-pro.css" rel="stylesheet">
+</head>
+<body class="editorial-page font-body-md text-body-md antialiased overflow-x-hidden min-h-screen flex flex-col">
+
+<!-- TopNavBar -->
+<nav class="ed-nav fixed top-0 w-full z-50">
+<div class="flex justify-between items-center h-16 px-sm md:px-margin-page w-full max-w-7xl mx-auto gap-6">
+<div class="flex items-center gap-6">
+<button class="ed-icon-btn ed-hamburger-btn flex items-center justify-center p-1.5" type="button" data-action="mobile-nav-toggle" aria-label="Mở menu điều hướng"><span class="material-symbols-outlined">menu</span></button>
+<a class="group inline-flex items-baseline gap-1.5" href="/" id="nav-brand">
+<span class="ed-wordmark" data-brand-name>AnonyHT</span>
+</a>
+<div class="ed-nav-links">
+<a class="ed-nav-link" href="/">Trang chủ</a>
+<a class="ed-nav-link" href="/viewall.html">Tất cả bài viết</a>
+<a class="ed-nav-link is-active" href="/terms.html">Điều khoản</a>
+<a class="ed-nav-link" href="/archive.html">Lưu trữ</a>
+</div>
+</div>
+<div class="flex items-center gap-sm">
+<div class="relative hidden sm:block" id="header-search-wrap">
+<span class="material-symbols-outlined ed-icon-faint absolute left-3 top-1/2 -translate-y-1/2 text-[16px] pointer-events-none">search</span>
+<input id="search-input" type="text" placeholder="Tìm kiếm bài viết..." aria-label="Tìm kiếm bài viết" class="ed-search pl-8 pr-1 py-1.5 font-body-sm text-body-sm w-40 lg:w-56">
+</div>
+<button class="ed-icon-btn sm:hidden flex items-center justify-center p-2" id="header-search-toggle" title="Tìm kiếm" data-action="search-toggle"><span class="material-symbols-outlined">search</span></button>
+<div class="ed-nav-divider hidden sm:block" aria-hidden="true"></div>
+<a data-writer-only href="/write.html" aria-label="Viết bài" class="ed-btn-primary ed-nav-write inline-flex text-[12px]">
+<span class="material-symbols-outlined">edit_note</span>Viết bài
+</a>
+<div class="relative">
+<button id="nav-avatar-btn" class="ed-avatar-btn overflow-hidden flex items-center justify-center active:scale-95 transition-transform" title="Tài khoản" data-action="nav-dropdown">
+<img alt="Ảnh đại diện" class="w-full h-full object-cover hidden" id="nav-avatar-img">
+<span class="material-symbols-outlined ed-icon-soft text-[18px]" id="nav-avatar-placeholder">person</span>
+</button>
+<div class="ed-dropdown-panel absolute right-0 mt-2 w-56 z-50 hidden origin-top-right" id="user-dropdown-menu"></div>
+</div>
+</div>
+</div>
+</nav>
+
+<!-- Search Overlay -->
+<div class="ed-search-overlay hidden sm:hidden fixed top-16 left-0 w-full z-40" id="search-overlay">
+<div class="max-w-7xl mx-auto px-sm md:px-margin-page py-4 flex items-center gap-4">
+<span class="material-symbols-outlined ed-icon-faint">search</span>
+<input class="ed-search flex-grow min-w-0 border-none py-1 font-body-lg text-body-lg" id="search-input-mobile" placeholder="Tìm kiếm bài viết..." type="text">
+<button class="ed-icon-btn shrink-0 w-11 h-11 flex items-center justify-center" aria-label="Đóng tìm kiếm" data-action="search-close"><span class="material-symbols-outlined">close</span></button>
+</div>
+</div>
+
+<main class="pro-doc flex-grow w-full">
+
+<!-- Page heading. The date is WRITTEN by the save that last changed a clause:
+     server/render-html.js rewrites this line from the terms table's updated_at,
+     which server/terms.js stamps at save time and at no other time - a legal
+     text claiming to have been updated today, every day, says nothing about when
+     its clauses actually changed. Until an admin saves for the first time the
+     date below is the shipped one, like the clauses in the article. -->
+<header class="pro-doc-head flex flex-col gap-2">
+<a class="ed-link-back tap-target inline-flex items-center gap-1.5 w-fit font-label-md text-label-md" href="/"><span class="material-symbols-outlined text-[18px]">arrow_back</span><span>Trang chủ</span></a>
+<h1 class="ed-hero-title">Điều khoản sử dụng</h1>
+<p class="ed-icon-faint font-body-sm text-body-sm" id="terms-updated">Cập nhật lần cuối: 10/09/2026</p>
+</header>
+<!-- Document layout (2026-10-05, css/theme-pro.css): the clause index at the
+     left (built by terms.js buildIndex() from the h2s, so it follows every
+     save), the editor and the document in the reading column. -->
+<div class="pro-doc-grid">
+<nav class="pro-doc-index" id="terms-index" aria-label="Các điều khoản">
+<p class="pro-doc-index-label">Nội dung</p>
+<ol id="terms-index-list"></ol>
+</nav>
+<div class="pro-doc-main">
+
+<!-- The editor an admin sees on this page and nobody else does. terms.js keeps
+     the whole section hidden until /api/auth/me answers with the 'admin' role,
+     so a reader never gets it revealed - and the PUT it saves through is
+     admin-guarded and sanitised server-side regardless. Each clause body is a
+     contenteditable region driven by the SAME rich-text engine the post writer
+     uses (this page loads js/write.js and, on reveal, css/write.css for it), so
+     bold, lists, links, cỡ chữ, giãn dòng... behave exactly as they do when
+     writing a new post. Two plain-text tokens stand for markup no toolbar can
+     produce: [brand] is the site-name slot, and a paragraph holding only
+     [contact] is the contact block of clause 10. Saving stamps "Cập nhật lần
+     cuối" with the save moment. -->
+<section id="terms-editor" class="hidden ed-panel p-sm sm:p-md md:p-lg flex flex-col gap-4" aria-label="Chỉnh sửa điều khoản">
+<div class="flex flex-col gap-1">
+<h2 class="ed-section-title inline-flex items-center gap-2"><span class="material-symbols-outlined" style="color: rgb(var(--ed-accent))">edit_note</span>Chỉnh sửa điều khoản</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Bấm vào tiêu đề hoặc nội dung từng điều khoản để sửa trực tiếp, thêm bớt hoặc đổi thứ tự tuỳ ý; bôi đen chữ rồi dùng thanh công cụ cuối màn hình để định dạng như khi viết bài. Dòng "Cập nhật lần cuối" đầu trang tự đặt lại theo lúc bấm Lưu.</p>
+</div>
+<div id="terms-editor-clauses" class="flex flex-col gap-4"></div>
+<div>
+<button type="button" id="terms-add-clause" class="ed-btn-outline tap-target inline-flex items-center gap-1.5 rounded px-4 py-2 font-label-md text-label-md"><span class="material-symbols-outlined text-[18px]">post_add</span>Thêm điều khoản</button>
+</div>
+<div class="terms-editor-foot flex flex-wrap items-center gap-3">
+<button type="button" id="terms-save" class="ed-btn-primary tap-target px-8 py-2 font-label-md text-label-md uppercase">Lưu điều khoản</button>
+<p id="terms-save-status" class="font-body-sm text-body-sm text-on-surface-variant" role="status" aria-live="polite"></p>
+</div>
+<p class="terms-note">Hai thẻ dành riêng cho trang này: [brand] chèn tên blog (tự đổi theo tên quản trị viên đặt), và một đoạn chỉ chứa [contact] chèn khối email liên hệ. Mọi định dạng khác dùng thanh công cụ như khung soạn bài viết.</p>
+</section>
+
+<!-- The document itself. Its styling is in css/common.css under `.terms-body`
+     (retinted here via the site-wide --c-* alias, see editorial.css); the site
+     name in clause 1 is a data-brand-name slot, so renaming the blog in the
+     admin panel renames it here too rather than leaving a stale name in the
+     sentence that defines what the blog is called. The address in clause 10 is
+     the same contact_email setting the footer shows. -->
+<article class="ed-panel p-sm sm:p-md md:p-lg terms-body" id="terms-body">
+
+<section>
+<h2>1. Giới thiệu</h2>
+<p><span data-brand-name>AnonyHT</span> (sau đây gọi là "Blog", "chúng tôi") là một blog cá nhân chia sẻ nội dung về công nghệ và đời sống. Khi truy cập và sử dụng Blog — bao gồm việc đọc bài viết, tạo tài khoản, hoặc để lại bình luận — bạn đồng ý với các điều khoản dưới đây. Nếu không đồng ý, vui lòng ngừng sử dụng Blog.</p>
+</section>
+
+<section>
+<h2>2. Tài khoản người dùng</h2>
+<p>Bạn có thể tạo tài khoản bằng email/mật khẩu hoặc đăng nhập qua Google hay GitHub. Bạn có trách nhiệm:</p>
+<ul>
+<li>Cung cấp thông tin chính xác khi đăng ký (tên, email).</li>
+<li>Bảo mật mật khẩu và thông tin đăng nhập của mình — không chia sẻ cho người khác.</li>
+<li>Chịu trách nhiệm cho mọi hoạt động diễn ra dưới tài khoản của bạn.</li>
+</ul>
+<p>Mặc định, tài khoản mới chỉ có quyền đọc bài viết và bình luận. Quản trị viên có thể cấp thêm quyền viết bài, hoặc tạm khoá/xoá tài khoản vi phạm điều khoản này mà không cần báo trước.</p>
+</section>
+
+<section>
+<h2>3. Bình luận và nội dung do bạn đăng tải</h2>
+<p>Khi bình luận trên Blog, bạn đồng ý <strong>không</strong> đăng tải nội dung:</p>
+<ul>
+<li>Vi phạm pháp luật Việt Nam hoặc quyền của bên thứ ba.</li>
+<li>Xúc phạm, quấy rối, phân biệt đối xử, hoặc mang tính thù ghét.</li>
+<li>Spam, quảng cáo trái phép, hoặc chứa mã độc/liên kết lừa đảo.</li>
+<li>Vi phạm bản quyền, đạo văn nội dung của người khác.</li>
+</ul>
+<p>Chúng tôi có quyền chỉnh sửa, ẩn hoặc xoá bất kỳ bình luận nào vi phạm các nguyên tắc trên, và khoá tài khoản vi phạm nhiều lần mà không cần thông báo trước.</p>
+</section>
+
+<section>
+<h2>4. Quyền sở hữu nội dung</h2>
+<p>Toàn bộ bài viết, hình ảnh minh hoạ và nội dung gốc trên Blog thuộc quyền sở hữu của tác giả, trừ khi có ghi chú khác. Bạn có thể chia sẻ, trích dẫn với điều kiện ghi rõ nguồn và liên kết về bài viết gốc. Không được sao chép toàn bộ bài viết nhằm mục đích thương mại mà không có sự đồng ý trước.</p>
+<p>Nội dung bình luận vẫn thuộc về người viết, nhưng bằng việc đăng bình luận, bạn cho phép Blog hiển thị công khai nội dung đó trên trang.</p>
+</section>
+
+<section>
+<h2>5. Thông báo qua email</h2>
+<p>Nếu bạn bật tuỳ chọn "Nhận email khi có bài viết mới" trong trang cá nhân, chúng tôi sẽ gửi email thông báo mỗi khi có bài viết mới được đăng. Bạn có thể tắt tuỳ chọn này bất kỳ lúc nào trong trang cá nhân của mình. Chúng tôi không bán hoặc chia sẻ email của bạn cho bên thứ ba vì mục đích quảng cáo.</p>
+</section>
+
+<section>
+<h2>6. Giới hạn trách nhiệm</h2>
+<p>Nội dung trên Blog phản ánh quan điểm và trải nghiệm cá nhân của tác giả, mang tính chất chia sẻ và tham khảo, <strong>không phải lời khuyên chuyên môn.</strong> Chúng tôi không đảm bảo tính chính xác tuyệt đối hoặc cập nhật liên tục của mọi thông tin, và không chịu trách nhiệm cho bất kỳ thiệt hại nào phát sinh từ việc áp dụng nội dung trên Blog vào thực tế.</p>
+</section>
+
+<section>
+<h2>7. Liên kết đến trang bên ngoài</h2>
+<p>Blog có thể chứa liên kết đến các trang web bên ngoài. Chúng tôi không kiểm soát và không chịu trách nhiệm về nội dung, chính sách bảo mật, hoặc hoạt động của các trang đó.</p>
+</section>
+
+<section>
+<h2>8. Thay đổi điều khoản</h2>
+<p>Điều khoản này có thể được cập nhật theo thời gian mà không cần báo trước. Phiên bản mới nhất luôn được đăng tại trang này, ngày cập nhật ghi ở đầu trang. Việc bạn tiếp tục sử dụng Blog sau khi điều khoản thay đổi đồng nghĩa với việc bạn chấp nhận các thay đổi đó.</p>
+</section>
+
+<section>
+<h2>9. Chấm dứt quyền truy cập</h2>
+<p>Chúng tôi có quyền tạm khoá hoặc xoá tài khoản của bất kỳ ai vi phạm điều khoản này, mà không cần báo trước hoặc bồi hoàn dưới bất kỳ hình thức nào.</p>
+</section>
+
+<section>
+<h2>10. Liên hệ</h2>
+<p>Nếu có thắc mắc về điều khoản này, bạn có thể liên hệ với quản trị viên của Blog qua email, hoặc xem thêm về tác giả tại trang <a href="/profile.html">thông tin tác giả</a>.</p>
+<p data-hide-if-empty="contact_email"><a data-setting-mailto="contact_email" class="footer-link"><span class="footer-link-label" data-setting="contact_email"></span></a></p>
+</section>
+
+<p class="terms-note">Đây là điều khoản sử dụng cho một blog cá nhân phi thương mại, không thay thế cho tư vấn pháp lý chuyên nghiệp.</p>
+
+</article>
+</div>
+</div>
+</main>
+
+<!-- Footer -->
+<!-- Just the copyright line, matching every other page now: Liên hệ moved up
+     into the nav (see .ed-nav-links above) and this page never carried an
+     "Điều khoản" footer item (a link to the page the reader is already
+     standing on is a dead step), so there was nothing left to keep here. -->
+<footer class="ed-footer w-full py-3 mt-auto">
+<!-- Footer (standard layout, 2026-10-04): brand and copyright (the link row was removed at the user's request).
+     Flat on the page background (theme-sky.css .site-footer). -->
+<div class="site-footer max-w-7xl mx-auto px-sm md:px-margin-page">
+<div class="site-footer-copy">© <span id="footer-year"></span> <span data-footer-text data-fallback="TuanPA.">TuanPA.</span></div>
+</div>
+</footer>
+
+<script src="/js/api.js"></script>
+<!-- The post writer's rich-text engine, loaded here so the clause editor below
+     formats text exactly the way "Viết bài mới" does - same docked toolbar, same
+     menus, same execCommand wrappers. Its page wiring (the post form) guards
+     itself away on any page without one; only the engine runs here. The chrome
+     CSS it needs (css/write.css) is linked by terms.js at the moment the editor
+     is revealed, so a reader who never sees the editor never downloads it. -->
+<script src="/js/write.js"></script>
+<!-- The page's own script: the footer year every page script opens with, and
+     the clause editor an admin gets on this page. Loaded last because it leans
+     on Auth, API and the engine above. -->
+<script src="/js/terms.js"></script>
+  <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "e3cef1a8e0e74a3793f39eaa873612f3"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title data-page-name="Lưu trữ">Lưu trữ - AnonyHT</title>
+<link rel="canonical" href="https://anonyht.com/archive.html">
+<meta name="description" content="Lưu trữ bài viết AnonyHT theo năm và tháng.">
+<meta name="theme-color" content="#f9f9f8" data-theme-color-dark="#141311">
+<!-- Favicon do admin đặt (Bảng quản trị > Quản lí trang chủ). server/render-html.js
+     điền href từ bảng settings trước khi gửi; giá trị trống hoặc chưa đặt thì bỏ cả thẻ. -->
+<link rel="icon" data-setting-href="favicon">
+<link rel="alternate" type="application/rss+xml" title="ANONYHT" href="/rss.xml">
+<!-- Theme switch. MUST stay here - blocking, in <head>, ahead of the
+     stylesheets - so <html class="dark"> is set before the first paint.
+     Deferring it (or folding it into api.js at the end of <body>) brings back
+     the white flash on every navigation. -->
+<script src="/js/theme.js"></script>
+
+<!-- Fonts. Both families are SELF-HOSTED in /css/fonts.css, which
+     scripts/fetch-fonts.py generates: Inter as the static faces
+     Google serves per unicode-range (latin / latin-ext / vietnamese - the
+     three a page of Vietnamese prose actually selects), Material Symbols as a
+     subset of just the icons in use. Same-origin is the point: the first paint
+     waits on no third party, the faces are discovered while this
+     render-blocking stylesheet parses, and the hashed filenames are what lets
+     server.js serve /fonts/ as immutable for a year.
+     The two font-display values differ because the families fail differently.
+     An icon is a LIGATURE - the markup contains the word "search" and the font
+     turns it into a glyph - so block hides nothing-yet instead of printing the
+     word while the subset arrives. Body text swaps, because its fallback stack
+     is already readable text at the right size.
+     The faces the first paint sets text in are preloaded between the
+     @generated markers below; fetch-fonts.py rewrites their hashed hrefs. -->
+<link href="/css/fonts.css" rel="stylesheet">
+<link href="/css/fonts-pro.css" rel="stylesheet">
+<!-- @font-face alone does not start a download until the layout needs a glyph,
+     which on the icon font means icons stay invisible for an extra round-trip
+     (display:block draws nothing), so the faces the first screen needs are
+     preloaded: the icon subset, plus the body family's 400 in the two
+     unicode-ranges Vietnamese prose is actually set in - latin and vietnamese,
+     which is why two, and why not the 700: body text is the first paint,
+     headings at worst the one after. `crossorigin` is required even
+     same-origin - fonts are always fetched anonymously, and a preload that
+     does not match the mode is simply downloaded twice.
+     The hrefs are hashed and therefore GENERATED - `npm run fetch:fonts`
+     rewrites everything between the markers below. Do not edit them by hand. -->
+<!-- @generated:font-preload -->
+<link as="font" crossorigin href="/fonts/material-symbols-subset.bb57fc90.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin href="/fonts/inter-n-400-latin.3100e775.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin href="/fonts/inter-n-400-vietnamese.5c66f9e0.woff2" rel="preload" type="font/woff2">
+<!-- /@generated:font-preload -->
+
+<!-- Editorial redesign (shared with index.html/post.html/...) - see
+     css/editorial.css. Newsreader is the headline display serif; preloaded
+     here for the same reason as the two Inter faces above. Not
+     @generated - hand-maintained, not part of the shared fetch-fonts.py
+     pipeline. -->
+<link as="font" crossorigin href="/fonts/newsreader-n-400-latin.62981321.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin href="/fonts/newsreader-n-400-vietnamese.f0dcc979.woff2" rel="preload" type="font/woff2">
+
+<!-- Design tokens, then the utilities. tailwind.css is COMPILED (see
+     tailwind.config.js + `npm run build:css`), replacing
+     <script src="https://cdn.tailwindcss.com">, which was not a stylesheet at
+     all but a 451 KB compiler: it parsed the DOM and only then generated and
+     appended a <style>. Until that finished not one utility existed - including
+     `.hidden`, which common.css does not define - so every element the markup
+     had hidden was painted and the page was a bare stack of unstyled text.
+     That is the other half of the flash.
+     Load order is deliberate: the CDN appended its <style> at the END of
+     <head>, after common.css, so keeping tailwind.css last preserves exactly
+     the cascade the pages were built against. -->
+<link href="/css/common.css" rel="stylesheet">
+<link href="/css/tailwind.css" rel="stylesheet">
+<!-- Editorial redesign (shared with the rest of the site) - see the file's
+     own header comment for scope and rationale. -->
+<link href="/css/editorial.css" rel="stylesheet">
+<link href="/css/theme-sky.css" rel="stylesheet">
+<!-- Restrained light/dark look (2026-10-05) - see css/theme-pro.css. Last, so it wins. -->
+<link href="/css/theme-pro.css" rel="stylesheet">
+</head>
+<body class="editorial-page font-body-md text-body-md antialiased overflow-x-hidden min-h-screen flex flex-col">
+
+<!-- TopNavBar -->
+<nav class="ed-nav fixed top-0 w-full z-50">
+<div class="flex justify-between items-center h-16 px-sm md:px-margin-page w-full max-w-7xl mx-auto gap-6">
+<div class="flex items-center gap-6">
+<button class="ed-icon-btn ed-hamburger-btn flex items-center justify-center p-1.5" type="button" data-action="mobile-nav-toggle" aria-label="Mở menu điều hướng"><span class="material-symbols-outlined">menu</span></button>
+<a class="group inline-flex items-baseline gap-1.5" href="/" id="nav-brand">
+<span class="ed-wordmark" data-brand-name>AnonyHT</span>
+</a>
+<div class="ed-nav-links">
+<a class="ed-nav-link" href="/">Trang chủ</a>
+<a class="ed-nav-link" href="/viewall.html">Tất cả bài viết</a>
+<a class="ed-nav-link" href="/terms.html">Điều khoản</a>
+<a class="ed-nav-link is-active" href="/archive.html">Lưu trữ</a>
+</div>
+</div>
+<div class="flex items-center gap-sm">
+<div class="relative hidden sm:block" id="header-search-wrap">
+<span class="material-symbols-outlined ed-icon-faint absolute left-3 top-1/2 -translate-y-1/2 text-[16px] pointer-events-none">search</span>
+<input id="search-input" type="text" placeholder="Tìm kiếm bài viết..." aria-label="Tìm kiếm bài viết" class="ed-search pl-8 pr-1 py-1.5 font-body-sm text-body-sm w-40 lg:w-56">
+</div>
+<button class="ed-icon-btn sm:hidden flex items-center justify-center p-2" id="header-search-toggle" title="Tìm kiếm" data-action="search-toggle"><span class="material-symbols-outlined">search</span></button>
+<div class="ed-nav-divider hidden sm:block" aria-hidden="true"></div>
+<a data-writer-only href="/write.html" aria-label="Viết bài" class="ed-btn-primary ed-nav-write inline-flex text-[12px]">
+<span class="material-symbols-outlined">edit_note</span>Viết bài
+</a>
+<div class="relative">
+<button id="nav-avatar-btn" class="ed-avatar-btn overflow-hidden flex items-center justify-center active:scale-95 transition-transform" title="Tài khoản" data-action="nav-dropdown">
+<img alt="Ảnh đại diện" class="w-full h-full object-cover hidden" id="nav-avatar-img">
+<span class="material-symbols-outlined ed-icon-soft text-[18px]" id="nav-avatar-placeholder">person</span>
+</button>
+<div class="ed-dropdown-panel absolute right-0 mt-2 w-56 z-50 hidden origin-top-right" id="user-dropdown-menu"></div>
+</div>
+</div>
+</div>
+</nav>
+
+<!-- Search Overlay -->
+<div class="ed-search-overlay hidden sm:hidden fixed top-16 left-0 w-full z-40" id="search-overlay">
+<div class="max-w-7xl mx-auto px-sm md:px-margin-page py-4 flex items-center gap-4">
+<span class="material-symbols-outlined ed-icon-faint">search</span>
+<input class="ed-search flex-grow min-w-0 border-none py-1 font-body-lg text-body-lg" id="search-input-mobile" placeholder="Tìm kiếm bài viết..." type="text">
+<button class="ed-icon-btn shrink-0 w-11 h-11 flex items-center justify-center" aria-label="Đóng tìm kiếm" data-action="search-close"><span class="material-symbols-outlined">close</span></button>
+</div>
+</div>
+
+<!-- Lưu trữ: every published post as a tree, year > month > post, newest
+     first (js/archive.js, GET /api/posts/archive). <details> elements, so the
+     tree opens and closes without script and stays keyboard-accessible. -->
+<main class="flex-grow pt-24 md:pt-28 pb-lg px-sm md:px-margin-page w-full max-w-7xl mx-auto">
+<div class="archive-wrap">
+<a class="tap-target inline-flex items-center gap-1 font-label-md text-label-md mb-sm ed-link-back" href="/"><span class="material-symbols-outlined text-sm">arrow_back</span> Về trang chủ</a>
+<div class="archive-head">
+<h1 class="ed-hero-title">Lưu trữ</h1>
+<div class="archive-tools hidden" id="archive-tools">
+<button type="button" class="archive-tool" data-archive="expand"><span class="material-symbols-outlined" aria-hidden="true">folder_open</span>Mở tất cả</button>
+<button type="button" class="archive-tool" data-archive="collapse"><span class="material-symbols-outlined" aria-hidden="true">folder</span>Thu gọn</button>
+</div>
+</div>
+<div class="archive-tabs" role="tablist" aria-label="Lưu trữ">
+<button type="button" role="tab" class="archive-tab" id="tab-posts" data-tab="posts" aria-selected="true" aria-controls="archive-panel-posts"><span class="material-symbols-outlined" aria-hidden="true">article</span>Bài viết</button>
+<button type="button" role="tab" class="archive-tab" id="tab-resources" data-tab="resources" aria-selected="false" aria-controls="archive-panel-resources"><span class="material-symbols-outlined" aria-hidden="true">folder</span>Tài nguyên</button>
+</div>
+
+<!-- Bài viết: year > month > post. -->
+<section class="archive-panel" id="archive-panel-posts" role="tabpanel" aria-labelledby="tab-posts">
+<p class="archive-summary hidden" id="archive-summary" aria-live="polite"></p>
+<div class="archive-tree" id="archive-tree" role="tree" aria-label="Bài viết theo năm và tháng"></div>
+</section>
+
+<!-- Tài nguyên: folders (any depth) of downloadable files. Reading is open to
+     all; downloading needs a signed-in account; admins manage folders/files.
+     server/routes/resources.js, js/archive.js. -->
+<section class="archive-panel" id="archive-panel-resources" role="tabpanel" aria-labelledby="tab-resources" hidden>
+<div class="res-bar">
+<p class="res-note" id="res-note"></p>
+<button type="button" class="archive-tool res-admin hidden" data-res="new-root"><span class="material-symbols-outlined" aria-hidden="true">create_new_folder</span>Thư mục mới</button>
+</div>
+<div class="archive-tree" id="res-tree" role="tree" aria-label="Tài nguyên"></div>
+<div class="res-uploads hidden" id="res-uploads" aria-live="polite"></div>
+<input type="file" id="res-file-input" multiple hidden>
+</section>
+</div>
+</main>
+
+<footer class="ed-footer w-full py-3 mt-auto">
+<!-- Footer (standard layout, 2026-10-04): brand and copyright (the link row was removed at the user's request).
+     Flat on the page background (theme-sky.css .site-footer). -->
+<div class="site-footer max-w-7xl mx-auto px-sm md:px-margin-page">
+<div class="site-footer-copy">© <span id="footer-year"></span> <span data-footer-text data-fallback="TuanPA.">TuanPA.</span></div>
+</div>
+</footer>
+
+<script src="/js/api.js"></script>
+<script src="/js/archive.js"></script>
+  <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "e3cef1a8e0e74a3793f39eaa873612f3"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

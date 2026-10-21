@@ -1,0 +1,50 @@
+[
+  {
+    "heading": "Giới thiệu",
+    "html": "<p><b>[brand]</b> (sau đây gọi là &quot;Blog&quot;, &quot;chúng tôi&quot;) là một blog cá nhân chia sẻ kiến thức và kinh nghiệm thực tế về công nghệ: mạng, hệ thống, máy chủ, điện toán đám mây và bảo mật. Khi truy cập và sử dụng Blog (bao gồm đọc bài viết, tạo tài khoản, bình luận hoặc tải tài nguyên), bạn đồng ý với các điều khoản dưới đây. Nếu không đồng ý, vui lòng ngừng sử dụng Blog.</p>"
+  },
+  {
+    "heading": "Tài khoản người dùng",
+    "html": "<p>Bạn có thể tạo tài khoản bằng email/mật khẩu (có xác minh email bằng mã gửi về hộp thư) hoặc đăng nhập bằng tài khoản Google hay GitHub. Bạn có trách nhiệm:</p>\n<ul><li>Cung cấp thông tin trung thực khi đăng ký (tên hoặc biệt danh, email).</li>\n<li>Bảo mật mật khẩu và thông tin đăng nhập, không chia sẻ cho người khác.</li>\n<li>Chịu trách nhiệm cho mọi hoạt động diễn ra dưới tài khoản của mình.</li></ul>\n<p>Mặc định, tài khoản mới có quyền đọc bài viết, bình luận và tải tài nguyên. Quản trị viên có thể cấp thêm quyền viết bài. Chúng tôi có thể tạm khoá hoặc xoá tài khoản vi phạm điều khoản này. Ngược lại, bạn có thể ngừng sử dụng Blog bất cứ lúc nào và yêu cầu xoá tài khoản theo mục &quot;Quyền riêng tư và dữ liệu cá nhân&quot;.</p>"
+  },
+  {
+    "heading": "Bình luận và nội dung do bạn đăng tải",
+    "html": "<p>Khi bình luận, bạn đồng ý không đăng tải nội dung:</p>\n<ul><li>Vi phạm pháp luật Việt Nam hoặc quyền của bên thứ ba.</li>\n<li>Xúc phạm, quấy rối, phân biệt đối xử hoặc mang tính thù ghét.</li>\n<li>Spam, quảng cáo trái phép, hoặc chứa mã độc, liên kết lừa đảo.</li>\n<li>Chứa thông tin cá nhân của người khác (số điện thoại, địa chỉ, giấy tờ...) khi chưa được họ cho phép.</li></ul>\n<p>Chúng tôi có quyền ẩn hoặc xoá bình luận vi phạm các nguyên tắc trên. Khi bình luận của bạn bị ẩn, bạn sẽ nhận được thông báo. Tài khoản vi phạm nhiều lần có thể bị khoá.</p>"
+  },
+  {
+    "heading": "Báo cáo vi phạm và yêu cầu gỡ nội dung",
+    "html": "<p>Nếu thấy bình luận vi phạm, bạn có thể dùng nút <b>Báo cáo</b> ngay dưới bình luận đó; quản trị viên sẽ xem xét và xử lý.</p>\n<p>Nếu bạn cho rằng nội dung trên Blog (bài viết, hình ảnh, tài nguyên) vi phạm bản quyền hoặc quyền hợp pháp của bạn, vui lòng gửi email kèm đường dẫn tới nội dung đó và mô tả quyền của bạn. Chúng tôi sẽ phản hồi và gỡ nội dung nếu yêu cầu hợp lệ.</p>"
+  },
+  {
+    "heading": "Quyền sở hữu nội dung",
+    "html": "<p>Toàn bộ bài viết, hình ảnh minh hoạ và nội dung gốc trên Blog thuộc quyền sở hữu của tác giả, trừ khi có ghi chú khác. Bạn có thể chia sẻ, trích dẫn với điều kiện ghi rõ nguồn và liên kết về bài viết gốc. Không được sao chép toàn bộ bài viết nhằm mục đích thương mại khi chưa có sự đồng ý trước.</p>\n<p>Nội dung bình luận vẫn thuộc về người viết, nhưng khi đăng bình luận, bạn cho phép Blog hiển thị công khai nội dung đó.</p>"
+  },
+  {
+    "heading": "Tài nguyên tải về",
+    "html": "<p>Mục <b>Lưu trữ → Tài nguyên</b> cung cấp tệp tin (phần mềm, tài liệu, media...) do quản trị viên tải lên. Khi sử dụng mục này, bạn đồng ý rằng:</p>\n<ul><li>Chỉ thành viên đã đăng nhập mới được xem danh sách và tải tệp.</li>\n<li>Tệp chỉ dùng cho mục đích cá nhân, học tập hoặc tham khảo; không phân phối lại, bán lại hoặc đăng tải lên nền tảng khác khi chưa được phép.</li>\n<li>Tệp được cung cấp &quot;nguyên trạng&quot;. Bạn tự kiểm tra (quét virus, đối chiếu mã kiểm tra nếu có) trước khi sử dụng; chúng tôi không chịu trách nhiệm cho thiệt hại phát sinh từ việc dùng tệp.</li>\n<li>Phần mềm của bên thứ ba vẫn chịu điều khoản bản quyền của nhà phát hành; bạn có trách nhiệm tuân thủ các điều khoản đó.</li></ul>"
+  },
+  {
+    "heading": "Quyền riêng tư và dữ liệu cá nhân",
+    "html": "<p>Chúng tôi chỉ thu thập dữ liệu cần thiết để Blog hoạt động:</p>\n<ul><li><b>Thông tin tài khoản:</b> tên/biệt danh, email, mật khẩu (chỉ lưu dạng đã mã hoá, không ai đọc được), ảnh đại diện và phần giới thiệu bạn tự điền. Nếu đăng nhập bằng Google hoặc GitHub, chúng tôi nhận tên, email (địa chỉ chính đã xác minh) và ảnh đại diện từ dịch vụ đó; với GitHub, đường dẫn trang GitHub của bạn còn được điền sẵn vào mục liên kết mạng xã hội trong trang cá nhân (bạn có thể sửa hoặc xoá).</li>\n<li><b>Hoạt động của bạn:</b> bình luận, lượt thích/không thích, báo cáo vi phạm và tuỳ chọn nhận email.</li></ul>\n<p><b>Thông tin hiển thị công khai:</b> tên, ảnh đại diện, phần giới thiệu, bài viết (nếu có) và bình luận của bạn. Email không bao giờ được hiển thị công khai.</p>\n<p><b>Cookie và lưu trữ trên trình duyệt:</b> Blog chỉ lưu thông tin phiên đăng nhập trên trình duyệt của bạn và dùng một cookie ngắn hạn trong lúc đăng nhập bằng Google hoặc GitHub. Blog không dùng cookie quảng cáo hay công cụ theo dõi người dùng.</p>\n<p><b>Bên thứ ba:</b> Blog sử dụng Cloudflare để bảo mật và tăng tốc (có xử lý địa chỉ IP khi bạn truy cập), dịch vụ gửi email để gửi thư xác minh và thông báo, và Google hoặc GitHub khi bạn chọn đăng nhập bằng dịch vụ tương ứng. Chúng tôi không bán hoặc cho thuê dữ liệu cá nhân của bạn.</p>\n<p><b>Quyền của bạn:</b> bạn có thể xem và sửa thông tin của mình trong trang cá nhân, tắt email thông báo bất cứ lúc nào, và yêu cầu xoá tài khoản cùng dữ liệu liên quan bằng cách gửi email từ địa chỉ đã đăng ký. Chúng tôi sẽ xử lý yêu cầu trong thời gian hợp lý.</p>"
+  },
+  {
+    "heading": "Thông báo qua email",
+    "html": "<p>Một số email là bắt buộc để tài khoản hoạt động: mã xác minh khi đăng ký và mã đặt lại mật khẩu.</p>\n<p>Nếu bạn bật tuỳ chọn &quot;Nhận email khi có bài viết mới&quot; trong trang cá nhân, chúng tôi sẽ gửi email mỗi khi có bài viết mới. Bạn có thể tắt tuỳ chọn này trong trang cá nhân hoặc bấm liên kết huỷ đăng ký có trong mỗi email. Chúng tôi không chia sẻ email của bạn cho bên thứ ba vì mục đích quảng cáo.</p>"
+  },
+  {
+    "heading": "Giới hạn trách nhiệm",
+    "html": "<p>Nội dung trên Blog phản ánh quan điểm và trải nghiệm cá nhân của tác giả, mang tính chia sẻ và tham khảo, không phải lời khuyên chuyên môn. Chúng tôi không đảm bảo mọi thông tin luôn chính xác tuyệt đối hoặc được cập nhật liên tục.</p>\n<p>Với các bài hướng dẫn kỹ thuật (câu lệnh, cấu hình mạng, máy chủ, tường lửa...), bạn tự chịu trách nhiệm khi áp dụng vào hệ thống của mình. Hãy sao lưu dữ liệu và thử trên môi trường thử nghiệm trước khi áp dụng cho hệ thống thật. Chúng tôi không chịu trách nhiệm cho thiệt hại phát sinh từ việc áp dụng nội dung trên Blog.</p>"
+  },
+  {
+    "heading": "Liên kết bên ngoài và nội dung tài trợ",
+    "html": "<p>Blog có thể chứa liên kết đến trang web bên ngoài. Chúng tôi không kiểm soát và không chịu trách nhiệm về nội dung, chính sách bảo mật hoặc hoạt động của các trang đó.</p>\n<p>Nếu một bài viết có nhà tài trợ, được cung cấp dịch vụ miễn phí để đánh giá, hoặc chứa liên kết giới thiệu (affiliate), điều đó sẽ được ghi rõ trong bài.</p>"
+  },
+  {
+    "heading": "Thay đổi điều khoản",
+    "html": "<p>Điều khoản này có thể được cập nhật theo thời gian. Phiên bản mới nhất luôn được đăng tại trang này, kèm ngày cập nhật ở đầu trang. Với những thay đổi quan trọng (ví dụ về dữ liệu cá nhân), chúng tôi sẽ thông báo trên Blog hoặc qua email trước khi áp dụng. Việc bạn tiếp tục sử dụng Blog sau khi điều khoản thay đổi đồng nghĩa với việc bạn chấp nhận các thay đổi đó.</p>"
+  },
+  {
+    "heading": "Liên hệ",
+    "html": "<p>Mọi thắc mắc về điều khoản, yêu cầu về dữ liệu cá nhân hoặc báo cáo vi phạm, vui lòng liên hệ quản trị viên của Blog qua email:</p>\n<p>[contact]</p>"
+  }
+]

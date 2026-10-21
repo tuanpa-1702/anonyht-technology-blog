@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title data-page-name="">AnonyHT</title>
+<!-- Site-level SEO/social tags. data-meta-content fills `content` from the
+     settings table (server/render-html.js) the same way data-setting-src
+     fills an <img src> above. meta_description is its OWN setting, not
+     hero_subtitle (the short tagline the <title> tag appends - see
+     render-html.js's title-fill pass): a search snippet wants a full
+     sentence or two describing the whole site, the exact thing Google was
+     showing an actual ARTICLE excerpt instead of before this field existed -
+     a bare page title with nothing substantial in the meta description is
+     exactly what pushes Google to pick its own text from the page body
+     instead. Admin > Quản lí trang chủ > "Mô tả SEO (Google)". A per-POST
+     page overrides all of this with its own title/description/image - see
+     fillPostMeta() in render-html.js. -->
+<meta name="description" data-meta-content="meta_description" data-fallback="AnonyHT là website chia sẻ kiến thức bảo mật, hacking và tối ưu hạ tầng. Nơi tổng hợp các bài viết chất lượng về thủ thuật, công nghệ cho lập trình viên và blogger.">
+<meta property="og:type" content="website">
+<!-- data-meta-content only ever fills the `content` attribute (see its own
+     comment in render-html.js) - data-brand-name a few lines up fills TEXT
+     content instead, which a void <meta> element has none of, so brand_name
+     (the same settings key data-brand-name reads) is named directly here. -->
+<meta property="og:site_name" data-meta-content="brand_name" data-fallback="AnonyHT">
+<meta property="og:title" data-meta-content="brand_name" data-fallback="AnonyHT">
+<meta property="og:description" data-meta-content="meta_description" data-fallback="AnonyHT là website chia sẻ kiến thức bảo mật, hacking và tối ưu hạ tầng. Nơi tổng hợp các bài viết chất lượng về thủ thuật, công nghệ cho lập trình viên và blogger.">
+<meta property="og:url" content="https://anonyht.com/">
+<link rel="canonical" href="https://anonyht.com/">
+<meta name="twitter:card" content="summary">
+<!-- WebSite + SearchAction structured data: tells Google what the site's own
+     search does (target: viewall.html?q=...), which is one of the signals
+     Google's algorithm weighs when deciding whether to show sitelinks (the
+     indented sub-links under a brand-name search result) - not a switch that
+     turns them on by itself. Sitelinks are fully automatic: there is no meta
+     tag or setting that requests them, only site structure, crawl history and
+     enough branded search volume over time, per Google's own documentation. -->
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"AnonyHT","url":"https://anonyht.com/","potentialAction":{"@type":"SearchAction","target":"https://anonyht.com/viewall.html?q={search_term_string}","query-input":"required name=search_term_string"}}</script>
+<meta name="theme-color" content="#f9f9f8" data-theme-color-dark="#141311">
+<!-- Favicon do admin đặt (Bảng quản trị > Quản lí trang chủ). server/render-html.js
+     điền href từ bảng settings trước khi gửi; giá trị trống hoặc chưa đặt thì bỏ cả thẻ. -->
+<link rel="icon" data-setting-href="favicon">
+<link rel="alternate" type="application/rss+xml" title="ANONYHT" href="/rss.xml">
+<!-- Theme switch. MUST stay here - blocking, in <head>, ahead of the
+     stylesheets - so <html class="dark"> is set before the first paint.
+     Deferring it (or folding it into api.js at the end of <body>) brings back
+     the white flash on every navigation. -->
+<script src="/js/theme.js"></script>
+<!-- Landing screen over the homepage (js/splash.js): blocking for the same
+     reason as theme.js - html.splash-on must be set before the first paint. -->
+<script src="/js/splash.js"></script>
+
+<!-- Fonts. Both families are SELF-HOSTED in /css/fonts.css, which
+     scripts/fetch-fonts.py generates: Inter as the static faces
+     Google serves per unicode-range (latin / latin-ext / vietnamese - the
+     three a page of Vietnamese prose actually selects), Material Symbols as a
+     subset of just the icons in use. Same-origin is the point: the first paint
+     waits on no third party, the faces are discovered while this
+     render-blocking stylesheet parses, and the hashed filenames are what lets
+     server.js serve /fonts/ as immutable for a year.
+     The two font-display values differ because the families fail differently.
+     An icon is a LIGATURE - the markup contains the word "search" and the font
+     turns it into a glyph - so block hides nothing-yet instead of printing the
+     word while the subset arrives. Body text swaps, because its fallback stack
+     is already readable text at the right size.
+     The faces the first paint sets text in are preloaded between the
+     @generated markers below; fetch-fonts.py rewrites their hashed hrefs. -->
+<link href="/css/fonts.css" rel="stylesheet">
+<link href="/css/fonts-pro.css" rel="stylesheet">
+<!-- @font-face alone does not start a download until the layout needs a glyph,
+     which on the icon font means icons stay invisible for an extra round-trip
+     (display:block draws nothing), so the faces the first screen needs are
+     preloaded: the icon subset, plus the body family's 400 in the two
+     unicode-ranges Vietnamese prose is actually set in - latin and vietnamese,
+     which is why two, and why not the 700: body text is the first paint,
+     headings at worst the one after. `crossorigin` is required even
+     same-origin - fonts are always fetched anonymously, and a preload that
+     does not match the mode is simply downloaded twice.
+     The hrefs are hashed and therefore GENERATED - `npm run fetch:fonts`
+     rewrites everything between the markers below. Do not edit them by hand. -->
+<!-- @generated:font-preload -->
+<link as="font" crossorigin href="/fonts/material-symbols-subset.bb57fc90.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin href="/fonts/inter-n-400-latin.3100e775.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin href="/fonts/inter-n-400-vietnamese.5c66f9e0.woff2" rel="preload" type="font/woff2">
+<!-- /@generated:font-preload -->
+
+<!-- Editorial redesign (shared with post.html - see public/css/editorial.css).
+     Newsreader is the headline display serif; preloaded here for the same reason
+     as the two Inter faces above: the hero title is set in it and is
+     close to the first paint. Not @generated - hand-maintained, this file is not
+     part of the shared fetch-fonts.py pipeline. -->
+<link as="font" crossorigin href="/fonts/newsreader-n-400-latin.62981321.woff2" rel="preload" type="font/woff2">
+<link as="font" crossorigin href="/fonts/newsreader-n-400-vietnamese.f0dcc979.woff2" rel="preload" type="font/woff2">
+
+<!-- Design tokens, then the utilities. tailwind.css is COMPILED (see
+     tailwind.config.js + `npm run build:css`), replacing
+     <script src="https://cdn.tailwindcss.com">, which was not a stylesheet at
+     all but a 451 KB compiler: it parsed the DOM and only then generated and
+     appended a <style>. Until that finished not one utility existed - including
+     `.hidden`, which common.css does not define - so every element the markup
+     had hidden was painted and the page was a bare stack of unstyled text.
+     That is the other half of the flash.
+     Load order is deliberate: the CDN appended its <style> at the END of
+     <head>, after common.css, so keeping tailwind.css last preserves exactly
+     the cascade the pages were built against. -->
+<link href="/css/common.css" rel="stylesheet">
+<link href="/css/tailwind.css" rel="stylesheet">
+<!-- Editorial redesign (shared with post.html) - see the file's own header
+     comment for scope and rationale. -->
+<link href="/css/editorial.css" rel="stylesheet">
+<link href="/css/theme-sky.css" rel="stylesheet">
+<!-- Restrained light/dark look (2026-10-05) - see css/theme-pro.css. Last, so it wins. -->
+<link href="/css/theme-pro.css" rel="stylesheet">
+<link href="/css/splash.css" rel="stylesheet">
+</head>
+<body class="editorial-page font-body-md text-body-md antialiased overflow-x-hidden min-h-screen flex flex-col">
+<!-- Màn chào (js/splash.js, css/splash.css). display:none unless splash.js
+     set html.splash-on. Texts are settings (splash_*), edited in Admin >
+     Quản lí trang chủ > "Màn chào"; render-html.js / api.js fill data-setting,
+     data-fallback is what shows until the admin saves them. -->
+<section id="splash" class="splash" aria-label="Giới thiệu blog">
+<canvas class="splash-net" aria-hidden="true"></canvas>
+<div class="splash-stage" aria-hidden="true">
+<div class="splash-iso">
+<div class="splash-floor"></div>
+<!-- 7 layers = the 7 OSI layers, L1 Physical at the bottom -->
+<div class="splash-layer"></div>
+<div class="splash-layer"></div>
+<div class="splash-layer"></div>
+<div class="splash-layer"></div>
+<div class="splash-layer"></div>
+<div class="splash-layer"></div>
+<div class="splash-layer"></div>
+</div>
+<span class="splash-spark"></span><span class="splash-spark"></span><span class="splash-spark"></span><span class="splash-spark"></span><span class="splash-spark"></span><span class="splash-spark"></span><span class="splash-spark"></span><span class="splash-spark"></span><span class="splash-spark"></span><span class="splash-spark"></span><span class="splash-spark"></span><span class="splash-spark"></span><span class="splash-spark"></span><span class="splash-spark"></span><span class="splash-spark"></span><span class="splash-spark"></span><span class="splash-spark"></span><span class="splash-spark"></span><span class="splash-spark"></span><span class="splash-spark"></span><span class="splash-spark"></span><span class="splash-spark"></span><span class="splash-spark"></span><span class="splash-spark"></span><span class="splash-spark"></span><span class="splash-spark"></span><span class="splash-spark"></span><span class="splash-spark"></span>
+</div>
+<div class="splash-content">
+<p class="splash-brand" data-setting="splash_brand" data-fallback="ANONYHT">ANONYHT</p>
+<p class="splash-title"><span data-setting="splash_title_1" data-fallback="Chia sẻ kiến thức">Chia sẻ kiến thức</span> <span class="splash-accent" data-setting="splash_title_2" data-fallback="hệ thống, bảo mật">hệ thống, bảo mật</span></p>
+<p class="splash-tags" data-setting="splash_tags" data-hide-if-empty="splash_tags" data-fallback="Network · Security · System · Technology">Network · Security · System · Technology</p>
+<button type="button" id="splash-enter" class="splash-enter"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h15M13 6l6 6-6 6"/></svg><span data-setting="splash_button" data-fallback="Vào blog">Vào blog</span></button>
+</div>
+</section>
+
+<!-- TopNavBar -->
+<nav class="ed-nav fixed top-0 w-full z-50">
+<div class="flex justify-between items-center h-16 px-sm md:px-margin-page w-full max-w-7xl mx-auto gap-6">
+<div class="flex items-center gap-6">
+<button class="ed-icon-btn ed-hamburger-btn flex items-center justify-center p-1.5" type="button" data-action="mobile-nav-toggle" aria-label="Mở menu điều hướng"><span class="material-symbols-outlined">menu</span></button>
+<!-- data-brand-name sits on the INNER span, not this <a>: applySiteBranding()
+     in js/api.js does el.textContent = ... on every [data-brand-name] element,
+     which would otherwise wipe out the accent dot sibling (and the wordmark's
+     own span, along with its serif styling) the moment settings load. -->
+<a class="group inline-flex items-baseline gap-1.5" href="/" id="nav-brand">
+<span class="ed-wordmark" data-brand-name>AnonyHT</span>
+</a>
+<!-- Section links, same four the footer's "Mục lục xuất bản" repeats. Each
+     page hardcodes its own .is-active - one static file per page, no router
+     to ask "which page is this" at runtime. -->
+<div class="ed-nav-links">
+<a class="ed-nav-link is-active" href="/">Trang chủ</a>
+<a class="ed-nav-link" href="/viewall.html">Tất cả bài viết</a>
+<a class="ed-nav-link" href="/terms.html">Điều khoản</a>
+<a class="ed-nav-link" href="/archive.html">Lưu trữ</a>
+</div>
+</div>
+<div class="flex items-center gap-sm">
+<div class="relative hidden sm:block" id="header-search-wrap">
+<span class="material-symbols-outlined ed-icon-faint absolute left-3 top-1/2 -translate-y-1/2 text-[16px] pointer-events-none">search</span>
+<input id="search-input" type="text" placeholder="Tìm kiếm bài viết..." aria-label="Tìm kiếm bài viết" class="ed-search pl-8 pr-1 py-1.5 font-body-sm text-body-sm w-40 lg:w-56">
+</div>
+<button class="ed-icon-btn sm:hidden flex items-center justify-center p-2" id="header-search-toggle" title="Tìm kiếm" data-action="search-toggle"><span class="material-symbols-outlined">search</span></button>
+<div class="ed-nav-divider hidden sm:block" aria-hidden="true"></div>
+<!-- No theme button here any more: Sáng / Tối / Đọc ban đêm is picked from the
+     "Giao diện" row at the top of the account dropdown (js/api.js
+     themePickerHtml()), on every page and at every width. -->
+<!-- No sm: responsive hiding here (unlike the divider/theme button beside it):
+     data-writer-only already toggles the ONE class that decides whether this
+     shows at all (js/api.js), and combining that with a bare `hidden` plus a
+     breakpoint-scoped display utility would leave a writer on a phone seeing
+     it as unstyled inline text below sm once JS removes `hidden`, instead of
+     staying gone. -->
+<a data-writer-only href="/write.html" aria-label="Viết bài" class="ed-btn-primary ed-nav-write inline-flex text-[12px]">
+<span class="material-symbols-outlined">edit_note</span>Viết bài
+</a>
+<div class="relative">
+<button id="nav-avatar-btn" class="ed-avatar-btn overflow-hidden flex items-center justify-center active:scale-95 transition-transform" title="Tài khoản" data-action="nav-dropdown">
+<img alt="Ảnh đại diện" class="w-full h-full object-cover hidden" id="nav-avatar-img">
+<span class="material-symbols-outlined ed-icon-soft text-[18px]" id="nav-avatar-placeholder">person</span>
+</button>
+<div class="ed-dropdown-panel absolute right-0 mt-2 w-56 z-50 hidden origin-top-right" id="user-dropdown-menu"></div>
+</div>
+</div>
+</div>
+</nav>
+
+<!-- Search Overlay -->
+<div class="ed-search-overlay hidden sm:hidden fixed top-16 left-0 w-full z-40" id="search-overlay">
+<div class="max-w-7xl mx-auto px-sm md:px-margin-page py-4 flex items-center gap-4">
+<span class="material-symbols-outlined ed-icon-faint">search</span>
+<input class="ed-search flex-grow min-w-0 border-none py-1 font-body-lg text-body-lg" id="search-input-mobile" placeholder="Tìm kiếm bài viết..." type="text">
+<button class="ed-icon-btn shrink-0 w-11 h-11 flex items-center justify-center" aria-label="Đóng tìm kiếm" data-action="search-close"><span class="material-symbols-outlined">close</span></button>
+</div>
+</div>
+
+<main id="home-main" class="pro-home flex-grow w-full">
+<!-- Homepage, restrained layout (2026-10-05, css/theme-pro.css): intro (settings
+     home_intro_title / home_intro_text, Admin > Quản lí trang chủ), the newest post as the feature, then "Mới nhất" as a dated list
+     beside a narrow column of topics and the most-read ranking. Server-filled
+     first paint: render-html.js fillLeadCard() + ssr-content.js fillHomeLinks()
+     (rows, topics); home.js re-renders the same markup. Ids are kept
+     as the last attribute of each slot - fillTextSlot() matches id="x">. -->
+<section class="pro-intro">
+<div class="pro-intro-text">
+<h1 class="pro-intro-title" data-setting="home_intro_title" data-fallback="Blog công nghệ về hệ thống, mạng, bảo mật">Blog công nghệ về hệ thống, mạng, bảo mật</h1>
+<p class="pro-intro-dek" data-setting="home_intro_text" data-hide-if-empty="home_intro_text" data-fallback=""></p>
+</div>
+</section>
+
+<section id="latest-section" class="pro-feature-wrap scroll-mt-24">
+<p class="pro-muted" id="latest-loading">Đang tải bài viết...</p>
+<p class="hidden text-error" id="latest-error"></p>
+<div class="hidden pro-feature" id="latest-grid">
+<article id="latest-main" class="pro-feature-card">
+<a class="pro-feature-media" id="latest-media" href="/viewall.html" tabindex="-1" aria-hidden="true"><img alt="" fetchpriority="high" decoding="async" id="latest-image"></a>
+<div class="pro-feature-body">
+<div class="pro-meta"><span class="pro-pin hidden" id="latest-pin"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4h6l-1 5 3 3v2h-4.5v6L12 21l-.5-1v-6H7v-2l3-3-1-5z"/></svg>Đã ghim</span><a class="pro-tag" href="/viewall.html" id="latest-tag"></a><span aria-hidden="true">·</span><span id="latest-date"></span></div>
+<h2 class="pro-feature-title" id="latest-title"></h2>
+<p class="pro-feature-dek line-clamp-3" id="latest-excerpt"></p>
+<a class="pro-more" href="/viewall.html" id="latest-more">Đọc bài →</a>
+</div>
+</article>
+</div>
+<div id="posts-empty" class="ed-empty hidden text-center py-12">Chưa có bài viết nào. Hãy là người đầu tiên <a href="/write.html">viết bài</a>!</div>
+</section>
+
+<div class="pro-columns">
+<section id="more-section" class="pro-main-col" aria-labelledby="more-title">
+<div class="pro-head"><h2 id="more-title">Mới nhất</h2><a href="/viewall.html">Tất cả bài viết →</a></div>
+<ol class="pro-list" id="more-grid"></ol>
+</section>
+<aside class="pro-side">
+<section id="topics-block" class="hidden" aria-labelledby="topics-title">
+<div class="pro-head"><h2 id="topics-title">Chủ đề</h2></div>
+<ul class="pro-topics" id="topic-list"></ul>
+</section>
+<section id="most-read-block" class="hidden" aria-labelledby="most-read-title">
+<div class="pro-head"><h2 id="most-read-title">Đọc nhiều</h2></div>
+<ol class="pro-rank" id="latest-secondary"></ol>
+</section>
+</aside>
+</div>
+</main>
+
+<!-- Footer -->
+<!-- Just the copyright line now - Liên hệ/Điều khoản moved up into the nav
+     (see the 5 links in .ed-nav above), so a footer that only ever held those
+     two links plus this line does not need to exist as anything more. -->
+<footer class="ed-footer w-full py-3 mt-auto">
+<!-- Footer (standard layout, 2026-10-04): brand and copyright (the link row was removed at the user's request).
+     Flat on the page background (theme-sky.css .site-footer). -->
+<div class="site-footer max-w-7xl mx-auto px-sm md:px-margin-page">
+<div class="site-footer-copy">© <span id="footer-year"></span> <span data-footer-text data-fallback="TuanPA.">TuanPA.</span></div>
+</div>
+</footer>
+
+<script src="/js/api.js"></script>
+<script src="/js/home.js"></script>
+  <!-- Cloudflare Web Analytics --><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "e3cef1a8e0e74a3793f39eaa873612f3"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

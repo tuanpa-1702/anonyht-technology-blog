@@ -1,0 +1,33 @@
+node_modules/
+data/
+public/uploads/
+# security-deploy.sh recreates this on every deploy, holding a DB snapshot and a
+# copy of .env (same secrets). Never committable.
+backups/
+
+# Every .env variant, not just .env: a `.env.bak.20260901-202118` left next to it
+# carries the same secrets and was previously committable.
+.env*
+!.env.example
+
+# Scratch/working dir: test scripts, admin.log, bq.db, server stubs - not source,
+# and holds logs that may carry request data. ~191M, never committable.
+tmp/
+
+# Local Claude Code workspace config.
+.claude/
+
+# Internal security write-up: documents this deployment's full defensive posture
+# and carries internal network IPs. Kept on the server, deliberately NOT published
+# (handing an attacker the map of the defenses). Remove this line to publish it.
+security.md
+
+npm-debug.log
+*.log
+
+# Editor/deploy backups. These used to be served to the public when they landed
+# under public/ - see the static-file guard in server/server.js.
+*.bak
+*.bak.*
+*.orig
+*.save

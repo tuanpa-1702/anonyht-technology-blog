@@ -1,0 +1,4055 @@
+/* ==========================================================================
+   Theme "Sky" (2026-09-29) - clean light-blue tech-blog look.
+   Loaded LAST on every editorial page, after editorial.css (and
+   image-layouts.css on post.html), so equal-specificity rules here win.
+
+   What it changes:
+   - the LIGHT palette ("Sáng"): cool blue-grey page, white cards, navy ink,
+     one blue accent. Dark and "Đọc ban đêm" keep their own tokens from
+     editorial.css (only the layout pieces below apply to them).
+   - headlines in bold Inter instead of the Newsreader serif;
+   - rounded, softly shadowed cards/panels;
+   - post.html: cover-as-hero with only the title on top of it,
+     numbered TOC card, related posts with thumbnail + date, light-blue table
+     headers, quote card, "Tags: ... / Chia sẻ: (f)(x)(in)" card.
+
+   To go back to the previous theme: remove the <link href="/css/theme-sky.css">
+   lines (or restore backups/theme-before-cloudflare-style-20260929).
+   ========================================================================== */
+
+/* ---- Light palette ---- */
+html:not(.dark) .editorial-page {
+  --ed-bg: 246 249 253;              /* #f6f9fd */
+  --ed-surface-lowest: 255 255 255;
+  --ed-surface-low: 240 245 252;     /* #f0f5fc pale blue panel */
+  --ed-surface: 232 240 251;         /* #e8f0fb chips, table head */
+  --ed-surface-high: 221 231 245;
+  --ed-ink: 15 30 58;                /* #0f1e3a navy */
+  --ed-ink-soft: 61 76 102;          /* #3d4c66 */
+  --ed-ink-faint: 107 122 148;       /* #6b7a94 */
+  --ed-divider: 223 231 242;         /* #dfe7f2 */
+  --ed-primary: 37 99 235;           /* #2563eb - solid buttons are blue now */
+  --ed-on-primary: 255 255 255;
+  --ed-primary-container: 17 24 39;
+  --ed-accent: 37 99 235;
+  --ed-on-accent: 255 255 255;
+  --ed-accent-soft: 219 234 254;
+  --ed-on-accent-soft: 30 64 175;
+}
+html:not(.dark) body.editorial-page { background: rgb(var(--ed-bg)); }
+
+/* ---- Type: bold sans headlines (all themes) ---- */
+.editorial-page .ed-hero-title,
+.editorial-page .ed-section-title,
+.editorial-page .ed-story-title,
+.editorial-page .ed-story-title--sm,
+.editorial-page .ed-wordmark,
+.editorial-page #post-content #related-title,
+.editorial-page #post-content .prose-content h1,
+.editorial-page #post-content .prose-content h2,
+.editorial-page #post-content .prose-content h3,
+.editorial-page #post-content .prose-content h4 {
+  font-family: var(--font-vi-sans);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+.editorial-page .ed-standfirst,
+.editorial-page .ed-dek { font-family: var(--font-vi-sans); font-style: normal; }
+
+/* ---- Nav ---- */
+html:not(.dark) .editorial-page .ed-nav {
+  background: rgb(255 255 255 / 0.92);
+  border-bottom: 1px solid rgb(var(--ed-divider));
+  box-shadow: 0 1px 12px rgb(15 30 58 / 0.04);
+}
+.editorial-page .ed-wordmark { color: rgb(var(--ed-accent)); }
+.editorial-page .ed-search { border-radius: 999px; }
+
+/* ---- Cards & panels: rounded + soft shadow ---- */
+.editorial-page .ed-panel,
+.editorial-page .ed-panel--low {
+  border-radius: 12px;
+}
+html:not(.dark) .editorial-page .ed-panel {
+  box-shadow: 0 1px 2px rgb(15 30 58 / 0.04), 0 4px 16px rgb(15 30 58 / 0.05);
+}
+.editorial-page .ed-panel.group { transition: box-shadow 0.2s ease, transform 0.2s ease; }
+html:not(.dark) .editorial-page .ed-panel.group:hover {
+  box-shadow: 0 2px 4px rgb(15 30 58 / 0.05), 0 10px 28px rgb(37 99 235 / 0.12);
+  transform: translateY(-2px);
+}
+.editorial-page .ed-hero-media,
+.editorial-page .ed-lead-media { border-radius: 12px; }
+.editorial-page .ed-btn-primary { border-radius: 8px; }
+
+/* Chips: a blue pill instead of the mono "#TAG" label. */
+.editorial-page .ed-chip {
+  font-family: var(--font-vi-sans);
+  font-weight: 600;
+  font-size: 0.75rem;
+  letter-spacing: 0;
+  text-transform: none;
+  color: rgb(var(--ed-accent));
+  background: rgb(var(--ed-accent) / 0.1);
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  /* A pill, never a bar: in a flex column it would otherwise stretch. */
+  align-self: flex-start;
+  width: fit-content;
+  max-width: 100%;
+}
+.editorial-page .ed-chip::before { content: none; }
+.editorial-page .ed-chip--on-media {
+  color: #fff;
+  background: rgb(37 99 235 / 0.92);
+}
+.editorial-page .ed-section-head,
+.editorial-page .ed-hero { border-color: rgb(var(--ed-divider)); }
+@media (prefers-reduced-motion: reduce) {
+  .editorial-page .ed-panel.group,
+  .editorial-page .ed-panel.group:hover { transition: none; transform: none; }
+}
+
+/* ==========================================================================
+   post.html
+   ========================================================================== */
+
+/* ---- Hero: cover behind, title on top ---- */
+.post-hero {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  /* The cover's own 40/21 (1200x630, what write.js crops to), so the whole
+     picture shows - nothing is cut off at the top or bottom. */
+  aspect-ratio: 40 / 21;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #0f1e3a;
+  isolation: isolate;
+  box-shadow: 0 8px 30px rgb(15 30 58 / 0.12);
+}
+.post-hero .ed-cover {
+  position: absolute;
+  inset: 0;
+  aspect-ratio: auto;
+  border-radius: 0;
+  z-index: -2;
+}
+.post-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgb(8 18 40 / 0.82) 0%, rgb(8 18 40 / 0.55) 45%, rgb(8 18 40 / 0.1) 100%),
+    linear-gradient(0deg, rgb(8 18 40 / 0.6) 0%, rgb(8 18 40 / 0) 55%);
+}
+.post-hero-text {
+  position: relative;
+  padding: 1.5rem;
+  max-width: 44rem;
+  /* Clicks on the title fall through to the cover (lightbox). */
+  pointer-events: none;
+}
+@media (min-width: 768px) {
+  .post-hero-text { padding: 2.25rem 2.5rem; }
+}
+.editorial-page .post-hero .ed-hero-title {
+  color: #fff;
+  font-size: clamp(1.75rem, 3.6vw, 2.625rem);
+  line-height: 1.18;
+  text-shadow: 0 2px 12px rgb(0 0 0 / 0.3);
+}
+@media (max-width: 639px) {
+  .post-hero { border-radius: 12px; }
+  .editorial-page .post-hero .ed-hero-title { font-size: 1.375rem; }
+  .post-hero-text { padding: 1rem 1.125rem; }
+}
+
+/* ---- Article body ---- */
+.editorial-page #post-content .prose-content h2 {
+  font-size: 1.5rem;
+  margin-top: 2.25rem;
+}
+.editorial-page #post-content .prose-content h3 { font-size: 1.1875rem; }
+.editorial-page #post-content .prose-content a { text-decoration: underline; text-underline-offset: 2px; }
+
+/* Tables: light-blue header, soft grid, rounded frame. */
+.editorial-page #post-content .prose-content table {
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid rgb(var(--ed-divider));
+  border-radius: 10px;
+  overflow: hidden;
+  font-size: 0.9375rem;
+}
+.editorial-page #post-content .prose-content th,
+.editorial-page #post-content .prose-content td {
+  border: 0;
+  border-bottom: 1px solid rgb(var(--ed-divider));
+  padding: 0.625rem 0.875rem;
+}
+.editorial-page #post-content .prose-content tr > * + * { border-left: 1px solid rgb(var(--ed-divider)); }
+.editorial-page #post-content .prose-content tr:last-child > td { border-bottom: 0; }
+.editorial-page #post-content .prose-content th,
+.editorial-page #post-content .prose-content thead td {
+  background: rgb(var(--ed-surface));
+  color: rgb(var(--ed-ink));
+  font-weight: 600;
+}
+
+/* Code blocks: rounded dark navy cards (published article only; the editor
+   in write.html keeps its own light block). */
+.editorial-page #post-content .prose-content pre,
+.editorial-page #post-content .prose-content .rt-code { border-radius: 10px; }
+.editorial-page #post-content .prose-content .rt-code {
+  background: #1e293b;
+  border-color: #1e293b;
+  overflow: hidden;
+}
+.editorial-page #post-content .prose-content .rt-code-lang {
+  color: rgb(203 213 225 / 0.75);
+  border-bottom-color: rgb(255 255 255 / 0.08);
+}
+.editorial-page #post-content .prose-content .rt-code-body,
+.editorial-page #post-content .prose-content .rt-code-body code {
+  /* Regular weight and a softer grey: light text on a dark card already reads
+     heavier than the same weight on white. */
+  font-weight: 400;
+  color: #cbd5e1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.editorial-page #post-content .prose-content .rt-code-body::selection,
+.editorial-page #post-content .prose-content .rt-code-body *::selection { background: rgb(96 165 250 / 0.4); color: #fff; }
+.editorial-page #post-content .rt-code-copy-btn {
+  border-color: rgb(255 255 255 / 0.15);
+  color: rgb(226 232 240 / 0.85);
+}
+.editorial-page #post-content .rt-code-copy-btn:hover { background: rgb(255 255 255 / 0.08); color: #fff; }
+html:not(.dark) .editorial-page #post-content .prose-content pre { background: #1e293b; font-weight: 400; color: #cbd5e1; -webkit-font-smoothing: antialiased; }
+html:not(.dark) .editorial-page #post-content .prose-content :not(pre) > code {
+  background: rgb(var(--ed-surface));
+  color: rgb(30 64 175);
+  border-radius: 4px;
+}
+
+/* Quote: a pale-blue card. */
+.editorial-page #post-content .prose-content blockquote {
+  background: rgb(var(--ed-surface-low));
+  border-radius: 12px;
+  border-left-color: rgb(var(--ed-accent));
+}
+
+/* ---- Under the hero: tag, byline, summary ---- */
+.editorial-page .post-meta .ed-byline-strip {
+  background: none;
+  padding: 0;
+  margin-top: 0;
+}
+.editorial-page .post-meta .ed-standfirst {
+  color: rgb(var(--ed-ink-soft));
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  padding-left: 1rem;
+  border-left: 3px solid rgb(var(--ed-accent));
+}
+.editorial-page .post-meta .ed-standfirst.hidden { display: none; }
+
+/* ---- Action bar ---- */
+.editorial-page #post-content .ed-action-bar { border-radius: 12px; }
+
+/* ---- Tags + share card ---- */
+.post-share-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1.5rem;
+  padding: 0.75rem 1.125rem;
+  background: rgb(var(--ed-surface-lowest));
+  border: 1px solid rgb(var(--ed-divider));
+  border-radius: 12px;
+  font-family: var(--font-vi-sans);
+  font-size: 0.8125rem;
+  color: rgb(var(--ed-ink-soft));
+}
+html:not(.dark) .post-share-bar { box-shadow: 0 1px 2px rgb(15 30 58 / 0.04), 0 4px 16px rgb(15 30 58 / 0.05); }
+.post-share-tags {
+  display: flex;
+  align-items: baseline;
+  gap: 0.375rem;
+  min-width: 0;
+  flex: 1 1 16rem;
+}
+.post-share-tags.hidden { display: none; }
+.post-share-tag-icon {
+  width: 15px;
+  height: 15px;
+  flex: none;
+  align-self: center;
+  color: rgb(var(--ed-accent));
+}
+.post-share-label { color: rgb(var(--ed-ink)); font-weight: 600; flex: none; }
+.post-share-tag { color: rgb(var(--ed-accent)); }
+.post-share-tag:hover { text-decoration: underline; }
+.post-share-links {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+.post-share-links .post-share-label { font-weight: 500; color: rgb(var(--ed-ink-soft)); margin-right: 0.125rem; }
+.post-share-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.875rem;
+  height: 1.875rem;
+  border-radius: 999px;
+  border: 0;
+  background: rgb(var(--ed-accent));
+  color: #fff;
+  cursor: pointer;
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+.post-share-btn svg { width: 15px; height: 15px; }
+.post-share-btn .material-symbols-outlined { font-size: 17px; }
+#share-fb { background: #1877f2; }
+#share-x { background: #111827; }
+#share-in { background: #0a66c2; }
+html.dark #share-x { background: #334155; }
+.post-share-btn:hover { transform: translateY(-1px); filter: brightness(1.1); }
+.post-share-btn:focus-visible { outline: 2px solid rgb(var(--ed-accent)); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) {
+  .post-share-btn, .post-share-btn:hover { transition: none; transform: none; }
+}
+
+/* ---- Sidebar: TOC card + related list card ---- */
+.editorial-page #toc-section,
+.editorial-page .related-section:not(.hidden) {
+  background: rgb(var(--ed-surface-lowest));
+  border: 1px solid rgb(var(--ed-divider));
+  border-radius: 12px;
+  padding: 1.125rem 1.25rem;
+}
+html:not(.dark) .editorial-page #toc-section,
+html:not(.dark) .editorial-page .related-section:not(.hidden) {
+  box-shadow: 0 1px 2px rgb(15 30 58 / 0.04), 0 4px 16px rgb(15 30 58 / 0.05);
+}
+.editorial-page #toc-section.hidden { display: none; }
+.editorial-page #toc-section .ed-kicker {
+  font-family: var(--font-vi-sans);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
+  color: rgb(var(--ed-ink));
+}
+/* Numbered entries: 1., 2., ... for h2; h3 are indented without a number. */
+#toc-list { counter-reset: sky-toc; }
+.editorial-page .ed-toc-link {
+  display: flex;
+  border-left: 0;
+  padding: 0.3125rem 0;
+  color: rgb(var(--ed-accent));
+}
+.editorial-page .ed-toc-link:not(.ed-toc-link--h3) { counter-increment: sky-toc; }
+.editorial-page .ed-toc-link:not(.ed-toc-link--h3)::before {
+  content: counter(sky-toc) '.';
+  flex: none;
+  min-width: 1.5rem;
+  color: rgb(var(--ed-ink-faint));
+}
+.editorial-page .ed-toc-link--h3 { padding-left: 1.5rem; }
+.editorial-page .ed-toc-link:hover { color: rgb(var(--ed-ink)); }
+.editorial-page .ed-toc-link.is-active { color: rgb(var(--ed-ink)); font-weight: 600; }
+
+.editorial-page #post-content #related-title {
+  font-size: 0.9375rem;
+  border-bottom: 0;
+  padding-bottom: 0;
+  margin-bottom: 0.75rem;
+}
+.editorial-page #post-content .related-card {
+  border-radius: 10px;
+  gap: 0.875rem;
+  align-items: flex-start;
+}
+.editorial-page #post-content .related-thumb {
+  border-radius: 8px;
+  overflow: hidden;
+}
+.editorial-page #post-content .related-title { font-weight: 500; font-size: 0.875rem; line-height: 1.4; }
+.editorial-page #post-content .related-facts {
+  display: block;
+  margin-top: 0.25rem;
+  font-family: var(--font-vi-sans);
+  font-size: 0.75rem;
+  color: rgb(var(--ed-ink-faint));
+}
+
+/* ---- Comments ---- */
+.editorial-page #comment-input { border-radius: 10px; }
+.editorial-page #comment-submit { border-radius: 8px; }
+
+/* ---- Footer ---- */
+html:not(.dark) .editorial-page .ed-footer {
+  background: rgb(255 255 255);
+  border-top: 1px solid rgb(var(--ed-divider));
+}
+
+/* ==========================================================================
+   profile.html - page numbers under "Bài viết của ..." (profile.js
+   renderPostsPage). Same look as viewall.html's own .pager-btn rules, which
+   live in that page's <style> and are not loaded here.
+   ========================================================================== */
+#my-posts-pager:not(.hidden) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  /* Air between the last row of cards and the numbers (the markup's mt-8 is
+     not in the compiled tailwind.css). */
+  margin-top: 2.5rem;
+}
+#my-posts-pager .pager-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.25rem;
+  height: 2.25rem;
+  padding: 0 0.5rem;
+  border: 1px solid rgb(var(--ed-divider));
+  border-radius: 999px;
+  background: rgb(var(--ed-surface-lowest));
+  font-family: var(--font-vi-sans);
+  font-size: 0.8125rem;
+  color: rgb(var(--ed-ink-soft));
+  cursor: pointer;
+  transition: border-color 0.16s ease, color 0.16s ease, background-color 0.16s ease;
+}
+#my-posts-pager .pager-btn .material-symbols-outlined { font-size: 18px; }
+#my-posts-pager .pager-btn:hover:not(:disabled):not(.is-current) {
+  border-color: rgb(var(--ed-accent) / 0.55);
+  color: rgb(var(--ed-accent));
+}
+#my-posts-pager .pager-btn.is-current {
+  border-color: rgb(var(--ed-primary));
+  background-color: rgb(var(--ed-primary));
+  color: rgb(var(--ed-on-primary));
+  font-weight: 600;
+}
+/* Disabled arrow (← on page 1, → on the last page): still clearly drawn, so the
+   row reads as balanced around its centre instead of leaning to one side. */
+#my-posts-pager .pager-btn:disabled {
+  opacity: 1;
+  color: rgb(var(--ed-ink-faint));
+  background: rgb(var(--ed-surface-low));
+  cursor: default;
+}
+#my-posts-pager .pager-btn:focus-visible { outline: 2px solid rgb(var(--ed-accent)); outline-offset: 1px; }
+#my-posts-pager .pager-gap { padding: 0 0.125rem; font-size: 0.8125rem; color: rgb(var(--ed-ink-faint)); }
+@media (max-width: 1023px) {
+  #my-posts-pager .pager-btn { min-width: 2.75rem; height: 2.75rem; }
+}
+
+/* ---- "Bài viết liên quan" colours (light theme), like the mockup: a pale
+   blue card, navy titles, blue-grey dates. ---- */
+html:not(.dark) .editorial-page .related-section:not(.hidden) {
+  background: linear-gradient(180deg, #f3f7fd 0%, #eaf2fc 100%);
+  border-color: #dce8f7;
+  box-shadow: none;
+}
+html:not(.dark) .editorial-page #post-content #related-title { color: #0f1e3a; }
+html:not(.dark) .editorial-page #post-content .related-card:hover { background: rgb(255 255 255 / 0.7); }
+html:not(.dark) .editorial-page #post-content .related-title { color: #1b2a4a; }
+html:not(.dark) .editorial-page #post-content .related-card:hover .related-title { color: #2563eb; }
+html:not(.dark) .editorial-page #post-content .related-facts { color: #5b7fb8; }
+html:not(.dark) .editorial-page #post-content .related-thumb { background: #dbe7f7; }
+
+/* ==========================================================================
+   Header (all pages) - "Sky" style: frosted white bar, a bold wordmark,
+   pill nav links, a soft-filled search pill, a solid
+   blue "Viết bài" pill and a round avatar. CSS only: the <nav class="ed-nav">
+   markup is the same on every page.
+   ========================================================================== */
+.editorial-page .ed-nav {
+  background: rgb(var(--ed-surface-lowest) / 0.82);
+  -webkit-backdrop-filter: saturate(180%) blur(14px);
+  backdrop-filter: saturate(180%) blur(14px);
+  border-bottom: 1px solid rgb(var(--ed-divider));
+  box-shadow: 0 1px 0 rgb(255 255 255 / 0.6) inset, 0 4px 20px rgb(15 30 58 / 0.05);
+}
+html.dark .editorial-page .ed-nav {
+  background: rgb(var(--ed-bg) / 0.85);
+  box-shadow: 0 4px 20px rgb(0 0 0 / 0.25);
+}
+
+/* Brand: the wordmark, centred on the row (both are sans now, so the
+   old baseline alignment against a serif wordmark is not needed). */
+.editorial-page #nav-brand,
+.editorial-page .ed-nav-links { align-self: center; }
+.editorial-page #nav-brand { align-items: center; gap: 0.5rem; }
+.editorial-page .ed-wordmark {
+  font-size: 1.1875rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: rgb(var(--ed-ink));
+}
+.editorial-page .ed-wordmark:hover { color: rgb(var(--ed-ink)); }
+
+/* Nav links: pills. */
+.editorial-page .ed-nav-links { gap: 0.25rem; }
+@media (min-width: 768px) {
+  .editorial-page .ed-nav-link {
+    display: inline-flex;
+    align-items: center;
+    height: 2.25rem;
+    padding: 0 0.875rem;
+    border-radius: 999px;
+    font-weight: 500;
+    color: rgb(var(--ed-ink-soft));
+    transition: color 0.15s ease, background-color 0.15s ease;
+  }
+  .editorial-page .ed-nav-link:hover {
+    color: rgb(var(--ed-accent));
+    background: rgb(var(--ed-accent) / 0.07);
+  }
+  .editorial-page .ed-nav-link.is-active {
+    color: rgb(var(--ed-accent));
+    background: rgb(var(--ed-accent) / 0.12);
+    font-weight: 600;
+  }
+}
+
+/* Search: a soft-filled pill that turns white with a blue ring on focus. */
+.editorial-page .ed-nav .ed-search {
+  height: 2.25rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: rgb(var(--ed-surface-low));
+  transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+}
+.editorial-page .ed-nav .ed-search:hover { border-color: rgb(var(--ed-divider)); }
+.editorial-page .ed-nav .ed-search:focus {
+  background: rgb(var(--ed-surface-lowest));
+  border-color: rgb(var(--ed-accent) / 0.6);
+  box-shadow: 0 0 0 3px rgb(var(--ed-accent) / 0.15);
+}
+.editorial-page #header-search-wrap .material-symbols-outlined { left: 0.875rem; }
+.editorial-page #header-search-wrap .ed-search { padding-left: 2.25rem; }
+
+/* Round icon buttons (search toggle, hamburger, close). */
+.editorial-page .ed-nav .ed-icon-btn,
+.editorial-page .ed-search-overlay .ed-icon-btn { border-radius: 999px; }
+.editorial-page .ed-nav .ed-icon-btn:hover { background: rgb(var(--ed-accent) / 0.08); color: rgb(var(--ed-accent)); }
+
+.editorial-page .ed-nav-divider { background: rgb(var(--ed-divider)); height: 1.25rem; }
+
+/* "Viết bài": solid blue pill. */
+.editorial-page .ed-nav-write {
+  height: 2.25rem;
+  padding: 0 1rem;
+  border: 0;
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  box-shadow: 0 4px 12px rgb(37 99 235 / 0.28);
+  transition: box-shadow 0.15s ease, transform 0.15s ease, filter 0.15s ease;
+}
+.editorial-page .ed-nav-write:hover {
+  color: #fff;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  filter: brightness(1.06);
+  box-shadow: 0 6px 18px rgb(37 99 235 / 0.36);
+  transform: translateY(-1px);
+}
+.editorial-page .ed-nav-write .material-symbols-outlined { font-size: 17px; }
+
+/* Avatar: a circle with a white gap and a thin blue ring. */
+.editorial-page .ed-avatar-btn {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  box-shadow: 0 0 0 2px rgb(var(--ed-surface-lowest)), 0 0 0 3.5px rgb(var(--ed-accent) / 0.35);
+  transition: box-shadow 0.15s ease;
+}
+.editorial-page .ed-avatar-btn:hover {
+  box-shadow: 0 0 0 2px rgb(var(--ed-surface-lowest)), 0 0 0 3.5px rgb(var(--ed-accent) / 0.8);
+}
+
+/* Account dropdown: rounded card. */
+.editorial-page .ed-dropdown-panel,
+.editorial-page #user-dropdown-menu {
+  border-radius: 14px;
+  box-shadow: 0 16px 40px rgb(15 30 58 / 0.14);
+}
+.editorial-page .ed-dropdown-avatar { border-radius: 999px; }
+.editorial-page .ed-dropdown-item { border-radius: 8px; }
+
+/* Reading progress: blue gradient. */
+.editorial-page .ed-progress-bar { background: linear-gradient(90deg, #60a5fa, #2563eb); }
+
+/* Mobile: the menu panel and the search overlay become cards. */
+@media (max-width: 767px) {
+  .editorial-page .ed-nav-links.mobile-open {
+    top: 4.25rem;
+    left: 0.75rem;
+    right: 0.75rem;
+    padding: 0.5rem;
+    gap: 0.125rem;
+    background: rgb(var(--ed-surface-lowest));
+    border: 1px solid rgb(var(--ed-divider));
+    border-radius: 14px;
+    box-shadow: 0 16px 40px rgb(15 30 58 / 0.14);
+  }
+  .editorial-page .ed-nav-links.mobile-open .ed-nav-link {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 2.75rem;
+    padding: 0 0.875rem;
+    border-radius: 10px;
+    color: rgb(var(--ed-ink));
+  }
+  .editorial-page .ed-nav-links.mobile-open .ed-nav-link.is-active {
+    color: rgb(var(--ed-accent));
+    background: rgb(var(--ed-accent) / 0.1);
+    font-weight: 600;
+  }
+  .editorial-page .ed-wordmark { font-size: 1.0625rem; }
+}
+.editorial-page .ed-search-overlay {
+  background: rgb(var(--ed-surface-lowest));
+  border-bottom: 1px solid rgb(var(--ed-divider));
+  box-shadow: 0 10px 24px rgb(15 30 58 / 0.08);
+}
+@media (prefers-reduced-motion: reduce) {
+  .editorial-page .ed-nav-write { transition: none; }
+  .editorial-page .ed-nav-write:hover { transform: none; }
+}
+/* Dark and "Đọc ban đêm": the header's blue pieces take that theme's own
+   accent (blue in Tối, gold in Đọc ban đêm) instead of the light theme's blue. */
+html.dark .editorial-page .ed-nav-write,
+html.dark .editorial-page .ed-nav-write:hover {
+  background: rgb(var(--ed-accent));
+  color: rgb(var(--ed-on-accent));
+  box-shadow: 0 4px 12px rgb(var(--ed-accent) / 0.25);
+}
+html.dark .editorial-page .ed-avatar-btn { background: rgb(var(--ed-accent)); }
+html.dark.sepia .editorial-page .ed-progress-bar { background: rgb(var(--ed-accent)); }
+
+/* ---- Round avatars: author bylines (home/viewall cards) and comments ---- */
+.editorial-page .ed-byline-avatar,
+.editorial-page .ed-comment-avatar,
+.editorial-page #comment-avatar-wrap,
+.editorial-page #comments-list [data-comment-id] > a[href^="/profile.html"] {
+  border-radius: 999px;
+}
+.editorial-page #comment-avatar-wrap,
+.editorial-page #comments-list [data-comment-id] > a[href^="/profile.html"] {
+  border: 0;
+  box-shadow: 0 0 0 2px rgb(var(--ed-surface-lowest)), 0 0 0 3px rgb(var(--ed-divider));
+}
+
+/* ==========================================================================
+   Dropdowns - "Sky" style
+   Account menu (#user-dropdown-menu, built by js/api.js renderNavAuthState):
+   a padded rounded card, a tinted header, the theme picker as a segmented
+   pill, and every row's icon in a small pale-blue tile. The inline listboxes
+   ("Danh mục", "Sắp xếp" on viewall.html) and every other .ed-dropdown-panel
+   get the same shell.
+   ========================================================================== */
+.editorial-page .ed-dropdown-panel {
+  padding: 0.375rem;
+  border-radius: 16px;
+  border: 1px solid rgb(var(--ed-divider));
+  background: rgb(var(--ed-surface-lowest));
+  box-shadow: 0 2px 6px rgb(15 30 58 / 0.05), 0 18px 44px rgb(15 30 58 / 0.14);
+}
+html.dark .editorial-page .ed-dropdown-panel { box-shadow: 0 18px 44px rgb(0 0 0 / 0.45); }
+.editorial-page #user-dropdown-menu {
+  width: 17.5rem;
+  margin-top: 0.625rem;
+  padding: 0.375rem;
+  border-radius: 16px;
+}
+
+/* Header: tinted card with a round avatar. */
+.editorial-page #user-dropdown-menu .ed-dropdown-header {
+  padding: 0.75rem;
+  border: 0;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgb(var(--ed-accent) / 0.1), rgb(var(--ed-accent) / 0.03));
+}
+.editorial-page #user-dropdown-menu .ed-dropdown-avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+  box-shadow: 0 0 0 2px rgb(var(--ed-surface-lowest)), 0 0 0 3.5px rgb(var(--ed-accent) / 0.35);
+}
+.editorial-page #user-dropdown-menu .ed-dropdown-name { font-weight: 700; font-size: 0.9375rem; }
+.editorial-page #user-dropdown-menu .ed-dropdown-email { color: rgb(var(--ed-ink-faint)); }
+
+.editorial-page .ed-dropdown-divider {
+  margin: 0.375rem 0.5rem;
+  border-top-color: rgb(var(--ed-divider));
+}
+.editorial-page #user-dropdown-menu .ed-dropdown-divider.my-1 { margin: 0.375rem 0.5rem; }
+.editorial-page #user-dropdown-menu .py-2 { padding-top: 0; padding-bottom: 0; }
+
+/* Theme picker: a segmented pill. */
+.editorial-page #user-dropdown-menu .ed-theme-picker { padding: 0.625rem 0.375rem 0.25rem; }
+.editorial-page .ed-theme-picker-label {
+  margin: 0 0 0.5rem 0.375rem;
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  color: rgb(var(--ed-ink-faint));
+}
+.editorial-page .ed-theme-seg {
+  gap: 3px;
+  padding: 3px;
+  border-radius: 12px;
+  background: rgb(var(--ed-surface-low));
+  border: 1px solid rgb(var(--ed-divider));
+}
+.editorial-page .ed-theme-opt {
+  min-height: 3.125rem;
+  border-radius: 9px;
+  color: rgb(var(--ed-ink-soft));
+  transition: color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+}
+.editorial-page .ed-theme-opt:hover { color: rgb(var(--ed-accent)); background: rgb(var(--ed-surface-lowest) / 0.6); }
+.editorial-page .ed-theme-opt.is-active {
+  color: rgb(var(--ed-accent));
+  background: rgb(var(--ed-surface-lowest));
+  box-shadow: 0 1px 2px rgb(15 30 58 / 0.08), 0 2px 8px rgb(15 30 58 / 0.06);
+}
+html.dark .editorial-page .ed-theme-opt.is-active { background: rgb(var(--ed-surface-high)); box-shadow: none; }
+
+/* Rows: rounded, icon in a tile. */
+.editorial-page #user-dropdown-menu .ed-dropdown-item {
+  gap: 0.75rem;
+  padding: 0.4375rem 0.625rem;
+  border-radius: 10px;
+  font-weight: 500;
+  color: rgb(var(--ed-ink));
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+.editorial-page #user-dropdown-menu .ed-dropdown-item > .material-symbols-outlined:first-child,
+.editorial-page #user-dropdown-menu .ed-dropdown-item > svg:first-child {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 9px;
+  font-size: 18px;
+  color: rgb(var(--ed-accent));
+  background: rgb(var(--ed-accent) / 0.09);
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+.editorial-page #user-dropdown-menu .ed-dropdown-item > svg:first-child { padding: 7px; box-sizing: border-box; }
+.editorial-page #user-dropdown-menu .ed-dropdown-item:hover {
+  background: rgb(var(--ed-accent) / 0.06);
+  color: rgb(var(--ed-accent));
+}
+.editorial-page #user-dropdown-menu .ed-dropdown-item:hover > .material-symbols-outlined:first-child {
+  background: rgb(var(--ed-accent));
+  color: rgb(var(--ed-on-accent));
+}
+/* Đăng xuất: the one red row. */
+.editorial-page #user-dropdown-menu [data-action="logout"] > .material-symbols-outlined:first-child {
+  color: #dc2626;
+  background: rgb(220 38 38 / 0.09);
+}
+.editorial-page #user-dropdown-menu [data-action="logout"]:hover { color: #dc2626; background: rgb(220 38 38 / 0.06); }
+.editorial-page #user-dropdown-menu [data-action="logout"]:hover > .material-symbols-outlined:first-child {
+  color: #fff;
+  background: #dc2626;
+}
+html.dark .editorial-page #user-dropdown-menu [data-action="logout"],
+html.dark .editorial-page #user-dropdown-menu [data-action="logout"] > .material-symbols-outlined:first-child { color: #f87171; }
+
+/* Inline listboxes ("Danh mục", "Sắp xếp"): pill trigger + rounded options. */
+.editorial-page .ed-inline-dd-btn {
+  padding: 0.3125rem 0.5rem 0.3125rem 0.875rem;
+  border: 1px solid rgb(var(--ed-divider));
+  border-radius: 999px;
+  background: rgb(var(--ed-surface-lowest));
+  transition: border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+}
+.editorial-page .ed-inline-dd-btn:hover,
+.editorial-page .ed-inline-dd-btn[aria-expanded="true"] {
+  color: rgb(var(--ed-accent));
+  border-color: rgb(var(--ed-accent) / 0.5);
+}
+.editorial-page .ed-inline-dd-btn[aria-expanded="true"] { box-shadow: 0 0 0 3px rgb(var(--ed-accent) / 0.12); }
+.editorial-page .ed-inline-dd-btn .material-symbols-outlined { transition: transform 0.2s ease; }
+.editorial-page .ed-inline-dd-btn[aria-expanded="true"] .material-symbols-outlined { transform: rotate(180deg); }
+.editorial-page .ed-inline-dd-menu { top: calc(100% + 0.5rem); min-width: 11rem; }
+.editorial-page .ed-inline-dd-option {
+  border-radius: 9px;
+  padding: 0.5rem 0.75rem;
+}
+.editorial-page .ed-inline-dd-option:hover { background: rgb(var(--ed-accent) / 0.06); color: rgb(var(--ed-accent)); }
+.editorial-page .ed-inline-dd-option.is-selected,
+.editorial-page .ed-inline-dd-option.is-selected:hover,
+html.dark .editorial-page .ed-inline-dd-option.is-selected,
+html.dark .editorial-page .ed-inline-dd-option.is-selected:hover {
+  background: rgb(var(--ed-accent) / 0.12);
+  color: rgb(var(--ed-accent));
+  font-weight: 600;
+}
+@media (prefers-reduced-motion: reduce) {
+  .editorial-page .ed-inline-dd-btn .material-symbols-outlined,
+  .editorial-page #user-dropdown-menu .ed-dropdown-item,
+  .editorial-page #user-dropdown-menu .ed-dropdown-item > .material-symbols-outlined:first-child { transition: none; }
+}
+
+/* ==========================================================================
+   App pages - admin.html (all tabs), profile.html, write.html
+   Same language as the public pages: rounded cards, pale-blue tiles behind
+   icons, pill controls, blue solid buttons, soft focus rings. Everything is
+   drawn from the --ed-* tokens, so Tối / Đọc ban đêm retint on their own.
+   ========================================================================== */
+
+/* ---- Shared: cards, labels, fields, buttons ---- */
+.editorial-page .ed-panel { border-radius: 16px; }
+.editorial-page .glass-card.rounded-xl,
+.editorial-page .glass-panel.rounded-xl,
+.editorial-page .glass-panel.rounded-2xl,
+.editorial-page .glass-card.rounded-2xl { border-radius: 16px; }
+.editorial-page .ed-label {
+  font-size: 0.6875rem;
+  letter-spacing: 0.08em;
+  color: rgb(var(--ed-ink-faint));
+}
+.editorial-page .ed-input,
+.editorial-page .user-search {
+  border-radius: 10px;
+  border-color: rgb(var(--ed-divider));
+  background-color: rgb(var(--ed-surface-low));
+  transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+}
+.editorial-page .ed-input:hover,
+.editorial-page .user-search:hover { border-color: rgb(var(--ed-accent) / 0.35); }
+.editorial-page .ed-input:focus,
+.editorial-page .user-search:focus,
+.editorial-page .ed-input:focus-within {
+  outline: none;
+  background-color: rgb(var(--ed-surface-lowest));
+  border-color: rgb(var(--ed-accent) / 0.6);
+  box-shadow: 0 0 0 3px rgb(var(--ed-accent) / 0.14);
+}
+.editorial-page .ed-btn-primary {
+  border-radius: 10px;
+  background: rgb(var(--ed-accent));
+  color: rgb(var(--ed-on-accent));
+  box-shadow: 0 4px 12px rgb(var(--ed-accent) / 0.22);
+  transition: filter 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+.editorial-page .ed-btn-primary:hover {
+  background: rgb(var(--ed-accent));
+  filter: brightness(1.07);
+  box-shadow: 0 6px 18px rgb(var(--ed-accent) / 0.3);
+}
+.editorial-page .ed-btn-outline,
+.editorial-page .glass-btn {
+  border-radius: 10px;
+  border-color: rgb(var(--ed-divider));
+  background: rgb(var(--ed-surface-lowest));
+  transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
+}
+.editorial-page .ed-btn-outline:hover,
+.editorial-page .glass-btn:hover {
+  border-color: rgb(var(--ed-accent) / 0.5);
+  color: rgb(var(--ed-accent));
+  background: rgb(var(--ed-accent) / 0.05);
+}
+.editorial-page .ed-btn-text { border-radius: 10px; }
+.editorial-page .ed-btn-text:hover { background: rgb(var(--ed-accent) / 0.06); }
+.editorial-page input[type="checkbox"] { accent-color: rgb(var(--ed-accent)); border-radius: 5px; }
+
+/* Card headings inside app panels: compact bold sans with a hairline. */
+.editorial-page #admin-app .ed-section-title,
+.editorial-page #profile-main .ed-section-title,
+.editorial-page #editor-main .ed-panel .ed-section-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+.editorial-page #editor-main .ed-panel .ed-section-head { border-bottom-color: rgb(var(--ed-divider)); }
+
+/* ---- Side rail (admin + profile) ---- */
+.editorial-page .side-rail {
+  border-radius: 16px;
+  border: 1px solid rgb(var(--ed-divider));
+  background: rgb(var(--ed-surface-lowest));
+}
+html:not(.dark) .editorial-page .side-rail,
+html:not(.dark) .editorial-page .ed-panel {
+  box-shadow: 0 1px 2px rgb(15 30 58 / 0.04), 0 4px 16px rgb(15 30 58 / 0.05);
+}
+.editorial-page .side-rail-identity {
+  margin: 0 0 0.5rem;
+  font-family: var(--font-vi-sans);
+  padding: 0.75rem;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgb(var(--ed-accent) / 0.1), rgb(var(--ed-accent) / 0.03));
+}
+.editorial-page .side-rail-identity img {
+  border-radius: 999px !important; /* the markup carries an inline 6px */
+  border: 0 !important;
+  box-shadow: 0 0 0 2px rgb(var(--ed-surface-lowest)), 0 0 0 3.5px rgb(var(--ed-accent) / 0.35);
+}
+.editorial-page .side-nav-item {
+  margin: 1px 0;
+  padding: 0.4375rem 0.625rem;
+  border-radius: 10px;
+  border-left: 0;
+  font-family: var(--font-vi-sans);
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  color: rgb(var(--ed-ink));
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+.editorial-page .side-nav-item > .material-symbols-outlined:first-child,
+.editorial-page .side-nav-item > span:first-child > .material-symbols-outlined:first-child {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 9px;
+  font-size: 18px;
+  color: rgb(var(--ed-accent));
+  background: rgb(var(--ed-accent) / 0.09);
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+.editorial-page .side-nav-item:hover {
+  background: rgb(var(--ed-accent) / 0.06);
+  color: rgb(var(--ed-accent));
+}
+.editorial-page .side-nav-item.active,
+.editorial-page .side-nav-item.active:hover {
+  background: rgb(var(--ed-accent) / 0.12);
+  color: rgb(var(--ed-accent));
+  font-weight: 600;
+  border-left: 0;
+  box-shadow: none;
+}
+.editorial-page .side-nav-item.active > .material-symbols-outlined:first-child,
+.editorial-page .side-nav-item:hover > .material-symbols-outlined:first-child,
+.editorial-page .side-nav-item.active > span:first-child > .material-symbols-outlined:first-child,
+.editorial-page .side-nav-item:hover > span:first-child > .material-symbols-outlined:first-child {
+  background: rgb(var(--ed-accent));
+  color: rgb(var(--ed-on-accent));
+}
+.editorial-page .side-rail .ed-dropdown-divider,
+.editorial-page .side-rail hr { border-color: rgb(var(--ed-divider)); }
+.editorial-page .side-nav-item[data-action="logout"] > .material-symbols-outlined:first-child {
+  color: #dc2626;
+  background: rgb(220 38 38 / 0.09);
+}
+.editorial-page .side-nav-item[data-action="logout"]:hover { color: #dc2626; background: rgb(220 38 38 / 0.06); }
+.editorial-page .side-nav-item[data-action="logout"]:hover > .material-symbols-outlined:first-child { color: #fff; background: #dc2626; }
+
+/* ---- Admin: overview ---- */
+.editorial-page .stat-card { border-radius: 16px; }
+.editorial-page .stat-card:hover {
+  border-color: rgb(var(--ed-accent) / 0.35);
+  box-shadow: 0 2px 4px rgb(15 30 58 / 0.05), 0 12px 28px rgb(var(--ed-accent) / 0.12);
+  transform: translateY(-2px);
+}
+.editorial-page .stat-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 12px;
+  font-size: 22px;
+  color: rgb(var(--ed-accent));
+  background: rgb(var(--ed-accent) / 0.1);
+}
+.editorial-page .ed-stat-number,
+.editorial-page .stat-card .ed-mono {
+  font-family: var(--font-vi-sans);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+.editorial-page .recent-row,
+.editorial-page .activity-row { border-radius: 12px; }
+.editorial-page .activity-avatar { border-radius: 999px; }
+
+/* ---- Admin: filter chips, tables, rows, pills ---- */
+.editorial-page .user-chip {
+  border-radius: 999px;
+  letter-spacing: 0.01em;
+  background: rgb(var(--ed-surface-lowest));
+  transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
+}
+.editorial-page .user-chip:hover { border-color: rgb(var(--ed-accent) / 0.5); color: rgb(var(--ed-accent)); }
+.editorial-page .user-chip.active,
+.editorial-page .user-chip.is-active,
+.editorial-page .user-chip[aria-pressed="true"] {
+  border-color: rgb(var(--ed-accent));
+  background: rgb(var(--ed-accent));
+  color: rgb(var(--ed-on-accent));
+}
+.editorial-page .user-role {
+  border-radius: 999px;
+  letter-spacing: 0.01em;
+}
+.editorial-page .user-role-menu { border-radius: 14px; padding: 0.375rem; }
+.editorial-page .user-role-option { border-radius: 9px; }
+.editorial-page .user-avatar { border-radius: 999px; border: 0; box-shadow: 0 0 0 1px rgb(var(--ed-divider)); }
+.editorial-page .user-action { border-radius: 9px; }
+.editorial-page .user-action:hover { background: rgb(var(--ed-accent) / 0.08); color: rgb(var(--ed-accent)); }
+.editorial-page .user-action--danger:hover { background: rgb(220 38 38 / 0.08); color: #dc2626; }
+.editorial-page .user-row:hover,
+.editorial-page .post-row:hover,
+.editorial-page .trash-row:hover { background: rgb(var(--ed-accent) / 0.04); }
+.editorial-page .user-table { border-collapse: separate; border-spacing: 0; }
+.editorial-page .user-table thead th,
+.editorial-page .user-table thead td {
+  background: rgb(var(--ed-surface-low));
+  color: rgb(var(--ed-ink-soft));
+  font-weight: 600;
+}
+.editorial-page .user-table thead th:first-child { border-top-left-radius: 10px; }
+.editorial-page .user-table thead th:last-child { border-top-right-radius: 10px; }
+.editorial-page [class*="status-pill"] { border-radius: 999px; }
+.editorial-page .glass-dropzone,
+.editorial-page .media-dropzone { border-radius: 14px; }
+.editorial-page .glass-preview { border-radius: 12px; }
+
+/* Modals: the shell inside each fixed overlay. */
+.editorial-page [id$="-modal"] > .ed-panel,
+.editorial-page [id$="-modal"] > div > .ed-panel,
+.editorial-page [id$="-modal"] .glass-panel {
+  border-radius: 20px;
+  box-shadow: 0 24px 64px rgb(15 30 58 / 0.25);
+}
+.editorial-page [id$="-modal"].bg-black\/40 {
+  background: rgb(15 30 58 / 0.35);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+
+/* ---- write.html ---- */
+/* "Thêm khối": each block type a row with its icon in a tile. */
+.editorial-page #editor-main .rt-add-btn {
+  justify-content: flex-start;
+  gap: 0.75rem;
+  padding: 0.4375rem 0.625rem;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: transparent;
+  font-family: var(--font-vi-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 1.25;
+  text-align: left;
+  white-space: normal;
+  overflow: visible;
+  min-width: 0;
+  color: rgb(var(--ed-ink));
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.editorial-page #editor-main .rt-add-btn > .material-symbols-outlined {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 9px;
+  font-size: 18px;
+  color: rgb(var(--ed-accent));
+  background: rgb(var(--ed-accent) / 0.09);
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+.editorial-page #editor-main .rt-add-btn:hover {
+  background: rgb(var(--ed-accent) / 0.06);
+  border-color: rgb(var(--ed-accent) / 0.15);
+  color: rgb(var(--ed-accent));
+}
+.editorial-page #editor-main .rt-add-btn:hover > .material-symbols-outlined {
+  background: rgb(var(--ed-accent));
+  color: rgb(var(--ed-on-accent));
+}
+.editorial-page #editor-main .rt-add-group { border: 0; background: none; padding: 0; gap: 0.125rem; }
+
+/* Title field: the post's own headline, set like one. */
+.editorial-page #post-title-input { font-weight: 800; letter-spacing: -0.02em; }
+.editorial-page #post-title-input::placeholder { color: rgb(var(--ed-ink-faint) / 0.55); }
+
+/* Formatting buttons (B / I / link and each block's toolbar). */
+.editorial-page .rt-btn { border-radius: 8px; transition: background-color 0.15s ease, color 0.15s ease; }
+.editorial-page .rt-btn:hover { background: rgb(var(--ed-accent) / 0.08); color: rgb(var(--ed-accent)); }
+.editorial-page .rt-btn[aria-pressed="true"] { background: rgb(var(--ed-accent) / 0.14); color: rgb(var(--ed-accent)); }
+
+/* Blocks being edited: rounded cards that light up while focused. */
+.editorial-page .rt-block {
+  border-radius: 14px;
+  border: 1px solid rgb(var(--ed-divider));
+  background: rgb(var(--ed-surface-lowest));
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.editorial-page .rt-block:hover { border-color: rgb(var(--ed-accent) / 0.3); }
+.editorial-page .rt-block:focus-within {
+  border-color: rgb(var(--ed-accent) / 0.55);
+  box-shadow: 0 0 0 3px rgb(var(--ed-accent) / 0.1);
+}
+.editorial-page .rt-empty-hint {
+  border: 2px dashed rgb(var(--ed-accent) / 0.25);
+  border-radius: 16px;
+  background: rgb(var(--ed-accent) / 0.03);
+}
+.editorial-page #cover-preview { border-radius: 12px !important; }
+.editorial-page .media-view-btn { border-radius: 8px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .editorial-page .side-nav-item,
+  .editorial-page .side-nav-item > .material-symbols-outlined:first-child,
+  .editorial-page #editor-main .rt-add-btn,
+  .editorial-page .rt-block,
+  .editorial-page .ed-btn-primary { transition: none; }
+  .editorial-page .stat-card:hover { transform: none; }
+}
+
+/* ==========================================================================
+   profile.html - hero card, round avatar, info chips, stat tiles, post tabs,
+   own-post cards and the settings/activity panels.
+   ========================================================================== */
+.editorial-page #profile-main .ed-panel--flush { border-radius: 20px; }
+.editorial-page .profile-cover { max-height: 17rem; }
+.editorial-page .profile-cover-img { border-radius: 0; }
+/* A soft fade at the bottom of the cover so the avatar ring sits on it cleanly. */
+.editorial-page .profile-cover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgb(8 18 40 / 0) 55%, rgb(8 18 40 / 0.28) 100%);
+}
+
+/* Avatar: a circle with a white ring and a lift. */
+.editorial-page #profile-avatar {
+  border-radius: 999px !important; /* the markup carries an inline 6px */
+  border: 4px solid rgb(var(--ed-surface-lowest)) !important;
+  box-shadow: 0 0 0 1px rgb(var(--ed-divider)), 0 10px 28px rgb(15 30 58 / 0.18) !important;
+}
+.editorial-page .profile-photo-btn--avatar { right: 0.375rem; bottom: 0.375rem; }
+.editorial-page .profile-photo-btn {
+  background: rgb(255 255 255 / 0.9);
+  color: rgb(var(--ed-accent));
+  box-shadow: 0 4px 14px rgb(15 30 58 / 0.2);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  transition: background-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
+}
+.editorial-page .profile-photo-btn:hover {
+  background: rgb(var(--ed-accent));
+  color: rgb(var(--ed-on-accent));
+  transform: scale(1.06);
+}
+html.dark .editorial-page .profile-photo-btn { background: rgb(var(--ed-surface-high) / 0.92); }
+html.dark .editorial-page .profile-photo-btn:hover { background: rgb(var(--ed-accent)); }
+
+/* Name, e-mail, location/phone as pills, bio. */
+.editorial-page #profile-name {
+  font-size: clamp(1.625rem, 3vw, 2.125rem);
+  font-weight: 800;
+  line-height: 1.2;
+}
+.editorial-page #profile-email,
+.editorial-page #profile-location,
+.editorial-page #profile-phone {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  width: fit-content;
+  max-width: 100%;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  background: rgb(var(--ed-accent) / 0.08);
+  color: rgb(var(--ed-accent));
+  font-family: var(--font-vi-sans);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.editorial-page #profile-location.hidden,
+.editorial-page #profile-phone.hidden { display: none; }
+.editorial-page .profile-meta-row { gap: 0.375rem; margin-top: 0.375rem; }
+.editorial-page #profile-bio { color: rgb(var(--ed-ink-soft)); margin-top: 0.75rem; }
+.editorial-page #profile-status-input { border-radius: 999px; }
+.editorial-page #profile-status-view {
+  width: fit-content;
+  padding: 0.375rem 0.875rem;
+  border-radius: 12px;
+  background: rgb(var(--ed-surface-low));
+  color: rgb(var(--ed-ink-soft));
+}
+.editorial-page #profile-status-view.hidden { display: none; }
+
+/* Stats: two pale-blue tiles. */
+.editorial-page #profile-stats-row {
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding-top: 1rem; /* air between the hairline and the tiles */
+  border-top: 1px solid rgb(var(--ed-divider));
+}
+.editorial-page #profile-stats-row > div {
+  min-width: 0;
+  padding: 0.4375rem 0.875rem;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgb(var(--ed-accent) / 0.1), rgb(var(--ed-accent) / 0.03));
+  border: 1px solid rgb(var(--ed-accent) / 0.12);
+}
+.editorial-page #profile-stats-row .ed-stat-number {
+  font-family: var(--font-vi-sans);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: rgb(var(--ed-accent));
+  font-size: 1.125rem !important;
+  line-height: 1.15;
+}
+.editorial-page #profile-stats-row .ed-label { font-size: 0.625rem; margin-top: 0.125rem; }
+
+/* "Bài viết của tôi": heading size + pill tabs. */
+.editorial-page #profile-main #my-posts-heading { font-size: 1.375rem; font-weight: 800; }
+.editorial-page #my-posts-tabs {
+  width: fit-content;
+  gap: 3px;
+  padding: 3px;
+  border-radius: 999px;
+  background: rgb(var(--ed-surface-low));
+  border: 1px solid rgb(var(--ed-divider));
+}
+.editorial-page .ed-post-tab {
+  border-radius: 999px;
+  background: transparent;
+  padding: 0.4375rem 0.875rem;
+}
+.editorial-page .ed-post-tab:hover { color: rgb(var(--ed-accent)); }
+.editorial-page .ed-post-tab.is-active {
+  background: rgb(var(--ed-accent));
+  color: rgb(var(--ed-on-accent));
+  box-shadow: 0 2px 8px rgb(var(--ed-accent) / 0.25);
+}
+.editorial-page .ed-post-tab-count {
+  font-family: var(--font-vi-sans);
+  font-weight: 700;
+  background: rgb(var(--ed-accent) / 0.12);
+  color: rgb(var(--ed-accent));
+}
+.editorial-page .ed-post-tab.is-active .ed-post-tab-count { background: rgb(255 255 255 / 0.25); color: inherit; }
+
+/* Post cards: lift on hover like the public cards; round edit/delete buttons. */
+.editorial-page #my-posts-list > .ed-panel {
+  transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+}
+html:not(.dark) .editorial-page #my-posts-list > .ed-panel:hover {
+  border-color: rgb(var(--ed-accent) / 0.3);
+  box-shadow: 0 2px 4px rgb(15 30 58 / 0.05), 0 10px 28px rgb(37 99 235 / 0.12);
+  transform: translateY(-2px);
+}
+.editorial-page #my-posts-list .ed-icon-btn {
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: rgb(var(--ed-accent) / 0.08);
+  color: rgb(var(--ed-accent));
+}
+.editorial-page #my-posts-list .ed-icon-btn .material-symbols-outlined { font-size: 19px; }
+.editorial-page #my-posts-list .ed-icon-btn:hover { background: rgb(var(--ed-accent)); color: rgb(var(--ed-on-accent)); }
+.editorial-page #my-posts-list [data-action="delete-my-post"] { background: rgb(220 38 38 / 0.08); color: #dc2626; }
+.editorial-page #my-posts-list [data-action="delete-my-post"]:hover { background: #dc2626; color: #fff; }
+
+/* Settings / password / notifications / activity panels. */
+.editorial-page .profile-panel > .ed-panel,
+.editorial-page .profile-panel .ed-panel { border-radius: 16px; }
+.editorial-page #profile-main .profile-panel .ed-section-title { font-size: 1.25rem; font-weight: 800; }
+.editorial-page .activity-item {
+  margin: 0 -0.5rem;
+  padding: 0.75rem;
+  border-radius: 12px;
+  border-bottom-color: rgb(var(--ed-divider));
+}
+.editorial-page .activity-item:hover { background: rgb(var(--ed-accent) / 0.05); }
+.editorial-page .activity-item:hover strong { color: rgb(var(--ed-accent)); }
+
+@media (prefers-reduced-motion: reduce) {
+  .editorial-page .profile-photo-btn,
+  .editorial-page #my-posts-list > .ed-panel { transition: none; }
+  .editorial-page .profile-photo-btn:hover,
+  .editorial-page #my-posts-list > .ed-panel:hover { transform: none; }
+}
+/* Someone else's profile has no e-mail to show: no empty pill. */
+.editorial-page #profile-email:empty { display: none; }
+
+/* A card's thumbnail is part of the card: no radius of its own (its 12px
+   corners inside the card's 16px ones read as a smaller box sitting in the
+   card). The card's overflow:hidden rounds the top corners; the bottom edge
+   runs straight into the card body. The standalone homepage lead image keeps
+   its own rounding. */
+.editorial-page .ed-panel .ed-lead-media,
+.editorial-page .ed-panel .ed-hero-media,
+.editorial-page .ed-panel > .overflow-hidden.relative.flex-shrink-0 { border-radius: 0; }
+/* Phones: the thumbnail is inset to the same 16px the card's text uses
+   (.p-sm), so picture and text share one left/right edge. */
+@media (max-width: 639px) {
+  .editorial-page #more-grid > .ed-panel > .ed-lead-media,
+  .editorial-page .ed-panel.group > .overflow-hidden.relative.flex-shrink-0 {
+    margin: 1rem 1rem 0;
+    border-radius: 12px;
+  }
+}
+
+/* Page numbers everywhere (Tất cả bài viết, trang cá nhân, Thư viện ảnh):
+   round buttons, the current page a solid accent circle. */
+.editorial-page .pager-btn,
+.editorial-page .media-pager-btn {
+  border-radius: 999px;
+  background: rgb(var(--ed-surface-lowest));
+  font-family: var(--font-vi-sans);
+  transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+}
+.editorial-page .pager-btn.is-current,
+.editorial-page .media-pager-btn.is-current {
+  border-color: rgb(var(--ed-accent));
+  background: rgb(var(--ed-accent));
+  color: rgb(var(--ed-on-accent));
+  box-shadow: 0 4px 12px rgb(var(--ed-accent) / 0.25);
+}
+.editorial-page .pager-btn:hover:not(:disabled):not(.is-current),
+.editorial-page .media-pager-btn:hover:not(:disabled):not(.is-current) {
+  border-color: rgb(var(--ed-accent) / 0.5);
+  color: rgb(var(--ed-accent));
+  background: rgb(var(--ed-accent) / 0.06);
+}
+.editorial-page .pager-btn:disabled,
+.editorial-page .media-pager-btn:disabled {
+  opacity: 1;
+  color: rgb(var(--ed-ink-faint));
+  background: rgb(var(--ed-surface-low));
+}
+
+/* viewall.html: air between the "Tất cả bài viết" headline and the filter card
+   (the Sky headline has a tighter line-height than the old serif one, so the
+   descenders were touching the card's top edge). */
+.editorial-page #page-title { line-height: 1.15; }
+.editorial-page #filter-search { margin-top: 1.5rem; border-radius: 16px; }
+
+/* Search fields: no @tailwindcss/forms focus ring. That 1px #2563eb ring was
+   drawn around the viewall field while it was 30rem wide, and when the field
+   shrank back (the #search-wrap width transition) Chromium could leave its
+   bottom edge behind as a stray blue line. The field's own focus state is the
+   border + background below; the wrapper gets its own compositing layer so a
+   resize repaints it cleanly. */
+.editorial-page .ed-search:focus,
+.editorial-page .ed-search:focus-visible {
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-ring-offset-shadow: 0 0 #0000;
+  box-shadow: none;
+  outline: none;
+  border-color: rgb(var(--ed-accent) / 0.6);
+  background: rgb(var(--ed-surface-lowest));
+}
+.editorial-page .ed-nav .ed-search:focus { box-shadow: none; }
+#search-wrap,
+#header-search-wrap {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* The homepage lead's byline bar (and any other boxed .ed-byline-strip):
+   the same rounding as the cards around it, not the old 4px. */
+.editorial-page .ed-byline-strip { border-radius: 12px; }
+
+/* "Đọc nhiều nhất" rank numbers (home.js, #latest-secondary): the page's own
+   sans instead of JetBrains Mono, set in a small pale-blue tile and centred
+   on the story beside it rather than hanging at its top edge. */
+.editorial-page #latest-secondary .ed-story-item { align-items: center; gap: 0.875rem; }
+.editorial-page #latest-secondary .ed-story-item > .ed-mono {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 12px;
+  background: rgb(var(--ed-accent) / 0.09);
+  color: rgb(var(--ed-accent));
+  font-family: var(--font-vi-sans);
+  font-size: 1rem !important; /* the markup carries an inline 1.25rem */
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+.editorial-page #latest-secondary .ed-story-item:hover > .ed-mono {
+  background: rgb(var(--ed-accent));
+  color: rgb(var(--ed-on-accent));
+}
+
+/* "Bài viết liên quan" / "Đọc tiếp": each suggestion in its own faint card,
+   so the list reads as separate items instead of one run of text. */
+.editorial-page #post-content .related-grid { gap: 0.5rem; }
+.editorial-page #post-content .related-card {
+  padding: 0.625rem;
+  border: 1px solid rgb(var(--ed-accent) / 0.1);
+  border-radius: 12px;
+  background: rgb(var(--ed-surface-lowest) / 0.55);
+  transition: background-color 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
+}
+html:not(.dark) .editorial-page #post-content .related-card:hover,
+.editorial-page #post-content .related-card:hover {
+  background: rgb(var(--ed-surface-lowest) / 0.95);
+  border-color: rgb(var(--ed-accent) / 0.28);
+  box-shadow: 0 4px 14px rgb(15 30 58 / 0.06);
+}
+html.dark .editorial-page #post-content .related-card { background: rgb(var(--ed-surface-high) / 0.35); border-color: rgb(var(--ed-divider)); }
+html.dark .editorial-page #post-content .related-card:hover { background: rgb(var(--ed-surface-high) / 0.7); box-shadow: none; }
+
+/* post.html (2026-09-30): the cover stands alone and the title moved down
+   into the header under it - no dark gradient over the picture any more, and
+   the title takes the page's ink instead of white-on-photo. */
+.post-hero::before { content: none; }
+.post-hero { background: rgb(var(--ed-surface-high)); cursor: zoom-in; }
+.editorial-page .post-meta .ed-hero-title {
+  color: rgb(var(--ed-ink));
+  font-size: clamp(1.75rem, 3.4vw, 2.5rem);
+  line-height: 1.2;
+  text-shadow: none;
+  margin-top: 0.25rem;
+}
+.post-hero .ed-cover {
+  position: relative;
+  inset: auto;
+  z-index: auto;
+  width: 100%;
+  height: 100%;
+}
+
+/* ---- write.html: the editor's pickers (.rt-select triggers + the one shared
+   .rt-menu listbox), including the "Bố cục ảnh" kind picker that replaced the
+   block's native <select> ---- */
+.editorial-page .rt-select {
+  border-radius: 10px;
+  border-color: rgb(var(--ed-divider));
+  background: rgb(var(--ed-surface-lowest));
+  box-shadow: none;
+  color: rgb(var(--ed-ink));
+  font-family: var(--font-vi-sans);
+}
+.editorial-page .rt-select:hover { border-color: rgb(var(--ed-accent) / 0.5); color: rgb(var(--ed-accent)); }
+.editorial-page .rt-select:focus-visible,
+.editorial-page .rt-select[aria-expanded='true'] {
+  border-color: rgb(var(--ed-accent) / 0.6);
+  box-shadow: 0 0 0 3px rgb(var(--ed-accent) / 0.14);
+  color: rgb(var(--ed-accent));
+}
+.editorial-page .rt-select[data-active='true'] {
+  border-color: rgb(var(--ed-accent) / 0.4);
+  background: rgb(var(--ed-accent) / 0.1);
+  color: rgb(var(--ed-accent));
+}
+.editorial-page .rt-select > .material-symbols-outlined { color: rgb(var(--ed-accent)); }
+/* The layout picker is a full-width field, not a toolbar pill. */
+.editorial-page .rt-layout-trigger {
+  display: flex;
+  width: 100%;
+  height: 2.75rem;
+  padding: 0 0.875rem;
+  gap: 0.625rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  background: rgb(var(--ed-surface-low));
+}
+.editorial-page .rt-layout-trigger .rt-select-value { max-width: none; flex: 1 1 auto; text-align: left; }
+.editorial-page .rt-layout-trigger > .material-symbols-outlined { font-size: 18px; }
+
+.editorial-page ~ .rt-menu,
+.rt-menu {
+  border-radius: 14px;
+  padding: 0.375rem;
+  background: rgb(var(--ed-surface-lowest));
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  border: 1px solid rgb(var(--ed-divider));
+  box-shadow: 0 2px 6px rgb(15 30 58 / 0.05), 0 18px 44px rgb(15 30 58 / 0.16);
+}
+html.dark .rt-menu { box-shadow: 0 18px 44px rgb(0 0 0 / 0.45); }
+.rt-menu-title {
+  border-bottom-color: rgb(var(--ed-divider));
+  color: rgb(var(--ed-ink-faint));
+  font-family: var(--font-vi-sans);
+}
+.rt-menu-option {
+  border-radius: 9px;
+  font-family: var(--font-vi-sans);
+  color: rgb(var(--ed-ink));
+}
+.rt-menu-option[aria-selected='true'] {
+  background: rgb(var(--ed-accent) / 0.12);
+  color: rgb(var(--ed-accent));
+}
+.rt-menu-option:hover,
+.rt-menu-option:focus {
+  background: rgb(var(--ed-accent) / 0.07);
+  box-shadow: none;
+  color: rgb(var(--ed-accent));
+}
+.rt-menu-option[aria-selected='true']:hover,
+.rt-menu-option[aria-selected='true']:focus { background: rgb(var(--ed-accent) / 0.15); }
+.rt-menu-option > .material-symbols-outlined { color: rgb(var(--ed-accent)); }
+.rt-menu-sample-hint { color: rgb(var(--ed-ink-faint)); }
+
+/* Footer: flat, on the page's own background - no white band, no rule. */
+.editorial-page .ed-footer,
+html:not(.dark) .editorial-page .ed-footer {
+  background: transparent;
+  border-top: 0;
+  box-shadow: none;
+}
+
+/* Header "Viết bài": a pill like the rest of the header (nav links, search,
+   avatar). The later app-page .ed-btn-primary rule (10px) was overriding it. */
+.editorial-page .ed-nav .ed-nav-write { border-radius: 999px; }
+
+/* ---- "Liên hệ" dialog (js/api.js openContactDialog) ---- */
+.contact-dialog {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+.contact-dialog[hidden] { display: none; }
+.contact-dialog-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgb(15 30 58 / 0.35);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  animation: contact-fade 0.18s ease;
+}
+.contact-dialog-card {
+  position: relative;
+  width: 100%;
+  max-width: 24rem;
+  padding: 1.75rem 1.5rem 1.5rem;
+  border-radius: 20px;
+  border: 1px solid rgb(var(--ed-divider));
+  background: rgb(var(--ed-surface-lowest));
+  box-shadow: 0 24px 64px rgb(15 30 58 / 0.25);
+  text-align: center;
+  font-family: var(--font-vi-sans);
+  color: rgb(var(--ed-ink));
+  animation: contact-pop 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+}
+html.dark .contact-dialog-backdrop { background: rgb(0 0 0 / 0.55); }
+html.dark .contact-dialog-card { box-shadow: 0 24px 64px rgb(0 0 0 / 0.5); }
+.contact-dialog-x {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  color: rgb(var(--ed-ink-faint));
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+.contact-dialog-x:hover { background: rgb(var(--ed-accent) / 0.08); color: rgb(var(--ed-accent)); }
+.contact-dialog-x .material-symbols-outlined { font-size: 20px; }
+.contact-dialog-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  margin-bottom: 0.875rem;
+  border-radius: 16px;
+  background: rgb(var(--ed-accent) / 0.1);
+  color: rgb(var(--ed-accent));
+}
+.contact-dialog-icon .material-symbols-outlined { font-size: 26px; }
+.contact-dialog-title { margin: 0; font-size: 1.25rem; font-weight: 800; letter-spacing: -0.015em; }
+.contact-dialog-text { margin: 0.375rem 0 0.625rem; font-size: 0.875rem; color: rgb(var(--ed-ink-soft)); }
+.contact-dialog-address {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0 0 1.25rem;
+  padding: 0.375rem 0.875rem;
+  border-radius: 999px;
+  background: rgb(var(--ed-accent) / 0.08);
+  color: rgb(var(--ed-accent));
+  font-size: 0.875rem;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.contact-dialog-actions { display: flex; flex-direction: column; gap: 0.5rem; }
+.contact-dialog-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  height: 2.75rem;
+  padding: 0 1rem;
+  border-radius: 999px;
+  border: 1px solid rgb(var(--ed-divider));
+  background: rgb(var(--ed-surface-lowest));
+  color: rgb(var(--ed-ink));
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+}
+.contact-dialog-btn .material-symbols-outlined { font-size: 18px; }
+.contact-dialog-btn:hover { border-color: rgb(var(--ed-accent) / 0.5); color: rgb(var(--ed-accent)); background: rgb(var(--ed-accent) / 0.05); }
+.contact-dialog-btn--primary {
+  border-color: transparent;
+  background: rgb(var(--ed-accent));
+  color: rgb(var(--ed-on-accent));
+  box-shadow: 0 4px 14px rgb(var(--ed-accent) / 0.3);
+}
+.contact-dialog-btn--primary:hover {
+  border-color: transparent;
+  background: rgb(var(--ed-accent));
+  color: rgb(var(--ed-on-accent));
+  filter: brightness(1.07);
+}
+.contact-dialog-btn--ghost { border-color: transparent; background: transparent; color: rgb(var(--ed-ink-soft)); }
+.contact-dialog-btn:focus-visible,
+.contact-dialog-x:focus-visible { outline: 2px solid rgb(var(--ed-accent)); outline-offset: 2px; }
+@keyframes contact-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes contact-pop { from { opacity: 0; transform: translateY(8px) scale(0.97); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .contact-dialog-backdrop, .contact-dialog-card { animation: none; }
+}
+
+/* A small gap between a tag pill and the title under it ("Đọc nhiều nhất" and
+   the profile cards). The markup's mt-1.5 is not in the compiled tailwind.css,
+   so the title sat flush against the pill. */
+.editorial-page .ed-chip + .ed-story-title--sm,
+.editorial-page .ed-chip + .ed-story-title,
+.editorial-page .ed-chip + h3,
+.editorial-page .ed-chip + h4 { margin-top: 0.5rem; }
+
+/* ---- Header bell (admins only, js/api.js syncNavNotifButton) ---- */
+.editorial-page .ed-nav-notif {
+  position: relative;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 999px;
+  border: 1px solid rgb(var(--ed-divider));
+  background: rgb(var(--ed-surface-lowest));
+  color: rgb(var(--ed-ink-soft));
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.editorial-page .ed-nav-notif .material-symbols-outlined { font-size: 20px; }
+.editorial-page .ed-nav-notif:hover {
+  color: rgb(var(--ed-accent));
+  border-color: rgb(var(--ed-accent) / 0.4);
+  background: rgb(var(--ed-accent) / 0.07);
+}
+.editorial-page .ed-nav-notif:focus-visible { outline: 2px solid rgb(var(--ed-accent)); outline-offset: 2px; }
+.editorial-page .ed-nav-notif-badge {
+  position: absolute;
+  top: -0.3rem;
+  right: -0.35rem;
+  min-width: 1.125rem;
+  height: 1.125rem;
+  padding: 0 0.3rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: #ef4444;
+  color: #fff;
+  box-shadow: 0 0 0 2px rgb(var(--ed-surface-lowest));
+  font-family: var(--font-vi-sans);
+  font-size: 0.625rem;
+  font-weight: 700;
+  line-height: 1;
+}
+.editorial-page .ed-nav-notif-badge[hidden] { display: none; }
+
+/* ---- "Cần đăng nhập / không có quyền" notices: admin.html #not-admin,
+   profile.html + write.html #not-logged-in, write.html #not-writer.
+   A centred card that fits a phone (the bare text used to run edge to edge),
+   with an icon tile, the message, and full-width pill buttons. ---- */
+.editorial-page #not-admin:not(.hidden),
+.editorial-page #not-logged-in:not(.hidden),
+.editorial-page #not-writer:not(.hidden) {
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 0.75rem;
+  width: calc(100% - 2rem);
+  max-width: 24rem;
+  margin: 7rem auto 4rem;
+  padding: 2rem 1.5rem 1.5rem;
+  border-radius: 20px;
+  border: 1px solid rgb(var(--ed-divider));
+  background: rgb(var(--ed-surface-lowest));
+  box-shadow: 0 2px 6px rgb(15 30 58 / 0.05), 0 18px 44px rgb(15 30 58 / 0.1);
+  text-align: center;
+  font-family: var(--font-vi-sans);
+}
+html.dark .editorial-page #not-admin,
+html.dark .editorial-page #not-logged-in,
+html.dark .editorial-page #not-writer { box-shadow: 0 18px 44px rgb(0 0 0 / 0.35); }
+/* The icon tile: a Material Symbols ligature, so no markup change. */
+.editorial-page #not-admin::before,
+.editorial-page #not-logged-in::before,
+.editorial-page #not-writer::before {
+  content: 'lock';
+  font-family: 'Material Symbols Outlined';
+  font-feature-settings: 'liga';
+  font-size: 26px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  margin-bottom: 0.25rem;
+  border-radius: 16px;
+  background: rgb(var(--ed-accent) / 0.1);
+  color: rgb(var(--ed-accent));
+}
+.editorial-page #not-admin::before { content: 'shield_person'; }
+.editorial-page #not-admin > p,
+.editorial-page #not-logged-in > p,
+.editorial-page #not-writer > p {
+  margin: 0 0 0.5rem;
+  max-width: none;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: rgb(var(--ed-ink-soft));
+  overflow-wrap: anywhere;
+}
+.editorial-page #not-admin .ed-btn-primary,
+.editorial-page #not-logged-in .ed-btn-primary {
+  justify-content: center;
+  width: 100%;
+  height: 2.75rem;
+  padding: 0 1rem;
+  border-radius: 999px;
+}
+.editorial-page #not-admin .ed-link-back,
+.editorial-page #not-writer .ed-link-back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  height: 2.75rem;
+  border-radius: 999px;
+  border: 1px solid rgb(var(--ed-divider));
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: rgb(var(--ed-ink));
+  transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
+}
+.editorial-page #not-admin .ed-link-back:hover,
+.editorial-page #not-writer .ed-link-back:hover {
+  border-color: rgb(var(--ed-accent) / 0.5);
+  color: rgb(var(--ed-accent));
+  background: rgb(var(--ed-accent) / 0.05);
+}
+
+/* ---- uiConfirm() / uiAlert() (js/api.js): the "Liên hệ" card, reused for every
+   confirmation and notice on the site. Red primary button + icon tile for the
+   destructive ones (Xoá, Vô hiệu hoá, Ẩn). ---- */
+.ui-dialog { z-index: 210; }
+.ui-dialog .contact-dialog-title { font-size: 1.125rem; line-height: 1.35; }
+.ui-dialog .ui-dialog-text {
+  margin: 0.5rem 0 1.25rem;
+  white-space: pre-wrap; /* multi-line notices (e.g. a reset password) keep their lines */
+  overflow-wrap: anywhere;
+  user-select: text;
+  line-height: 1.55;
+}
+.ui-dialog .ui-dialog-text[hidden] { display: none; }
+.ui-dialog .contact-dialog-title + .contact-dialog-actions { margin-top: 1.25rem; }
+.ui-dialog--danger .contact-dialog-icon { background: rgb(220 38 38 / 0.1); color: #dc2626; }
+.ui-dialog--danger .contact-dialog-btn--primary {
+  background: #dc2626;
+  color: #fff;
+  box-shadow: 0 4px 14px rgb(220 38 38 / 0.3);
+}
+.ui-dialog--danger .contact-dialog-btn--primary:hover { background: #dc2626; color: #fff; }
+html.dark .ui-dialog--danger .contact-dialog-icon { color: #f87171; }
+.ui-dialog .contact-dialog-btn[hidden] { display: none; }
+/* Two buttons side by side from a comfortable width: "Huỷ" left, action right. */
+@media (min-width: 420px) {
+  .ui-dialog .contact-dialog-actions { flex-direction: row-reverse; }
+  .ui-dialog .contact-dialog-actions > * { flex: 1 1 0; }
+  .ui-dialog .contact-dialog-btn--ghost { border-color: rgb(var(--ed-divider)); }
+}
+
+/* ---- Comment thread branch lines (post.js renderCommentHtml) ----
+   A stem runs down from the root commenter's avatar (40px, centre at 20px)
+   and an elbow curves from it into each reply's avatar (32px, centre 16px
+   down). The last reply ends the stem in its elbow. */
+.editorial-page .ed-comment-item { border-radius: 16px; }
+.editorial-page .ed-comment-item > [data-comment-id] { position: relative; }
+.editorial-page .ed-comment-item.has-replies > [data-comment-id]::after {
+  content: '';
+  position: absolute;
+  left: 19px;
+  top: 3rem;
+  bottom: 0;
+  width: 2px;
+  border-radius: 2px;
+  background: rgb(var(--ed-accent) / 0.25);
+  pointer-events: none;
+}
+.editorial-page .comment-replies {
+  margin-left: 19px;
+  padding-left: 1.5rem;
+}
+.editorial-page .comment-reply {
+  position: relative;
+  padding-top: 1.25rem;
+}
+/* The stem passing this reply on its way to the next one. */
+.editorial-page .comment-reply::before {
+  content: '';
+  position: absolute;
+  left: -1.5rem;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: rgb(var(--ed-accent) / 0.25);
+  pointer-events: none;
+}
+.editorial-page .comment-reply:last-child::before { content: none; }
+/* The elbow into this reply's avatar. */
+.editorial-page .comment-reply::after {
+  content: '';
+  position: absolute;
+  left: -1.5rem;
+  top: 0;
+  width: calc(1.5rem - 4px);
+  height: calc(1.25rem + 16px);
+  border-left: 2px solid rgb(var(--ed-accent) / 0.25);
+  border-bottom: 2px solid rgb(var(--ed-accent) / 0.25);
+  border-bottom-left-radius: 12px;
+  pointer-events: none;
+}
+/* Round reply avatars sit on the line cleanly. */
+.editorial-page .comment-reply [data-comment-id] > a:first-child { border-radius: 999px; }
+@media (max-width: 639px) {
+  .editorial-page .comment-replies { padding-left: 1.125rem; }
+  .editorial-page .comment-reply::before,
+  .editorial-page .comment-reply::after { left: -1.125rem; }
+  .editorial-page .comment-reply::after { width: calc(1.125rem - 4px); }
+}
+
+/* Nested replies: a reply that has answers grows its own stem down from its
+   (32px) avatar, and its .comment-replies starts the next branch level. */
+.editorial-page .comment-reply.has-replies > [data-comment-id]::after {
+  content: '';
+  position: absolute;
+  left: 15px;
+  top: 2.25rem;
+  bottom: 0;
+  width: 2px;
+  border-radius: 2px;
+  background: rgb(var(--ed-accent) / 0.25);
+  pointer-events: none;
+}
+.editorial-page .comment-reply > .comment-replies { margin-left: 15px; }
+/* "↳ trả lời Tên" on replies laid out past the deepest level. The elbow grows
+   by the label's height so it still lands on the avatar. */
+.editorial-page .comment-reply-to {
+  margin: 0 0 0.25rem;
+  height: 1.25rem;
+  line-height: 1.25rem;
+  font-family: var(--font-vi-sans);
+  font-size: 0.75rem;
+  color: rgb(var(--ed-ink-faint));
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.editorial-page .comment-reply-to strong { color: rgb(var(--ed-accent)); font-weight: 600; }
+.editorial-page .comment-reply:has(> .comment-reply-to)::after { height: calc(1.25rem + 1.5rem + 16px); }
+/* The reply body is the stem's containing block, so the stem stops where the
+   body ends (at the first nested elbow) instead of running to the bottom of
+   the whole sub-thread. */
+.editorial-page .comment-reply > [data-comment-id] { position: relative; }
+/* Every branch segment is drawn the same way - a 2px border-left - so the
+   straight stems and the curved elbows snap to the same device pixels. With
+   the stems as 2px backgrounds and the elbows as borders, a scaled display
+   rounded them differently (2px vs 1.6px) and every joint showed a jog. */
+.editorial-page .ed-comment-item.has-replies > [data-comment-id]::after,
+.editorial-page .comment-reply::before,
+.editorial-page .comment-reply.has-replies > [data-comment-id]::after {
+  width: 0;
+  background: none;
+  border-radius: 0;
+  border-left: 2px solid rgb(var(--ed-accent) / 0.25);
+}
+
+/* Phones: "Viết bài" is just its icon, a round button the size of the bell
+   and the avatar beside it (the label wrapped onto two lines and overflowed
+   the pill). The label is a bare text node, so it is hidden with font-size 0
+   and the icon gets its size back; aria-label on the link keeps the name. */
+@media (max-width: 639px) {
+  .editorial-page .ed-nav .ed-nav-write {
+    width: 2.25rem;
+    height: 2.25rem;
+    padding: 0;
+    gap: 0;
+    justify-content: center;
+    font-size: 0;
+    flex: none;
+  }
+  .editorial-page .ed-nav .ed-nav-write .material-symbols-outlined { font-size: 20px; }
+  /* Outlined like the bell next to it, not a solid blue disc. */
+  .editorial-page .ed-nav .ed-nav-write,
+  html.dark .editorial-page .ed-nav .ed-nav-write {
+    background: rgb(var(--ed-surface-lowest));
+    border: 1px solid rgb(var(--ed-divider));
+    color: rgb(var(--ed-ink-soft));
+    box-shadow: none;
+    filter: none;
+    transform: none;
+  }
+  .editorial-page .ed-nav .ed-nav-write:hover,
+  html.dark .editorial-page .ed-nav .ed-nav-write:hover {
+    background: rgb(var(--ed-accent) / 0.07);
+    border-color: rgb(var(--ed-accent) / 0.4);
+    color: rgb(var(--ed-accent));
+    box-shadow: none;
+  }
+}
+/* Branch lines, final pass: an opaque colour (the accent pre-mixed into the
+   comment card's own surface) so a joint can never darken where two segments
+   meet, and the pass-through stem of a reply starts where the previous elbow
+   begins to curve instead of lying on top of that elbow's straight part. */
+.editorial-page .ed-comment-item {
+  --branch-line: color-mix(in srgb, rgb(var(--ed-accent)) 30%, rgb(var(--ed-surface-low)));
+}
+.editorial-page .ed-comment-item.has-replies > [data-comment-id]::after,
+.editorial-page .comment-reply::before,
+.editorial-page .comment-reply.has-replies > [data-comment-id]::after {
+  border-left-color: var(--branch-line);
+}
+.editorial-page .comment-reply::after {
+  border-left-color: var(--branch-line);
+  border-bottom-color: var(--branch-line);
+}
+/* 12px = the elbow's corner radius: the elbow owns the line down to there. */
+.editorial-page .comment-reply::before { top: calc(1.25rem + 16px - 12px); }
+.editorial-page .comment-reply:has(> .comment-reply-to)::before { top: calc(1.25rem + 1.5rem + 16px - 12px); }
+
+/* ---- Tables: column widths / row heights and phones ----
+   A table carrying a <colgroup> (widths an admin dragged in write.html) is laid
+   out fixed, so those percentages are what the columns get, on every screen. */
+.rich-text-block table:has(> colgroup),
+.rt-editor table:has(> colgroup) { table-layout: fixed; }
+.rich-text-block td,
+.rich-text-block th { overflow-wrap: break-word; }
+/* Phones (user, 2026-10-05): column widths follow the text in them - a short
+   label column ("Hạng mục", "Ưu điểm") stays narrow and the long-text column
+   gets the rest - instead of equal columns. Widths dragged in the editor
+   (colgroup %) are for wide screens and are ignored here. overflow-wrap:
+   anywhere on links/code keeps a long URL or path from hogging the width. */
+@media (max-width: 639px) {
+  .rich-text-block table,
+  .rich-text-block table:has(> colgroup) { table-layout: auto; font-size: 0.875rem; }
+  .rich-text-block table > colgroup > col { width: auto !important; }
+  /* Words never break between letters - that let the auto layout squeeze a
+     label column to one letter wide ("H/ạ/n/g"). Only links and code, the
+     long unbreakable runs, may break anywhere. */
+  .rich-text-block td,
+  .rich-text-block th {
+    padding: 0.5rem 0.625rem;
+    /* Every column keeps a floor (no one-letter columns), and above that
+       floor a long run - "/etc/network/interfaces,", a URL - may break
+       anywhere instead of pushing the next column off the screen. */
+    min-width: 6rem;
+    overflow-wrap: anywhere;
+    word-break: normal;
+    hyphens: manual;
+  }
+  /* The label column (first cell of each row) keeps room for a short label
+     like "Nhược điểm" on one line; the auto layout would otherwise give it
+     only its longest word. */
+  .rich-text-block table tr > :first-child:not(:only-child) { min-width: 7.5rem; }
+  /* A table that still does not fit (many columns) scrolls sideways inside
+     its own frame (post.js wraps each article table in .table-scroll). */
+  .rich-text-block .table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 1rem 0; }
+  .rich-text-block .table-scroll > table { margin: 0; }
+  /* 3+ columns with a header row (post.js .rt-tbl-stack): one card per row.
+     The header row is hidden - each value carries its column name instead. */
+  .rich-text-block table.rt-tbl-stack,
+  .editorial-page #post-content .prose-content table.rt-tbl-stack {
+    display: block;
+    border: 0;
+    border-radius: 0;
+    overflow: visible;
+    background: none;
+  }
+  .rich-text-block table.rt-tbl-stack :is(thead, tbody, tfoot) { display: block; }
+  .rich-text-block table.rt-tbl-stack tr.rt-tbl-head-row { display: none; }
+  .rich-text-block table.rt-tbl-stack tr {
+    display: block;
+    margin: 0 0 0.75rem;
+    padding: 0.25rem 0;
+    border: 1px solid rgb(var(--ed-divider));
+    border-radius: 0.75rem;
+    background: rgb(var(--ed-surface-lowest));
+  }
+  .rich-text-block table.rt-tbl-stack tr:last-child { margin-bottom: 0; }
+  .editorial-page #post-content .prose-content table.rt-tbl-stack :is(td, th),
+  .rich-text-block table.rt-tbl-stack :is(td, th) {
+    display: block;
+    min-width: 0;
+    padding: 0.5rem 0.875rem;
+    border: 0 !important;
+    background: none !important;
+    text-align: left;
+  }
+  .rich-text-block table.rt-tbl-stack :is(td, th) + :is(td, th) { border-top: 1px solid rgb(var(--ed-divider) / 0.7) !important; }
+  /* The row's first cell is the card's title. */
+  .rich-text-block table.rt-tbl-stack tr > :first-child { font-weight: 700; color: rgb(var(--ed-ink)); }
+  /* Every other cell: its column's name above the value. */
+  .rich-text-block table.rt-tbl-stack tr > :not(:first-child)[data-label]::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 0.125rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: rgb(var(--ed-accent));
+  }
+  .rich-text-block table.rt-tbl-stack tr > :empty { display: none; }
+  .editorial-page #post-content .prose-content th,
+  .editorial-page #post-content .prose-content td { padding: 0.5rem 0.625rem; }
+}
+
+/* write.html: the resize affordance (admins only - write.js rtResizeAllowed). */
+.rt-editor table[data-rt-resize="col"],
+.rt-editor table[data-rt-resize="col"] * { cursor: col-resize; }
+.rt-editor table[data-rt-resize="row"],
+.rt-editor table[data-rt-resize="row"] * { cursor: row-resize; }
+body.rt-resizing { user-select: none; -webkit-user-select: none; }
+body.rt-resizing--col, body.rt-resizing--col * { cursor: col-resize !important; }
+body.rt-resizing--row, body.rt-resizing--row * { cursor: row-resize !important; }
+body.rt-resizing .rt-editor table { outline: 2px solid rgb(var(--ed-accent) / 0.35); outline-offset: 2px; }
+
+/* Phones/tablets (the sidebar stacks under the article below 1024px):
+   - "Chia sẻ:" starts at the left like "Tags:" above it, instead of being
+     pushed to the right edge once the card wraps onto two lines;
+   - air between the end of the article (tags/share card) and the Mục lục card. */
+@media (max-width: 1023px) {
+  .post-share-links { margin-left: 0; }
+  .post-share-bar { justify-content: flex-start; }
+  .editorial-page .post-sidebar { margin-top: 1.5rem; }
+}
+
+/* ---- Scrolling placeholders (js/api.js initPlaceholderMarquee) ----
+   Only on fields whose hint is wider than the field: the native placeholder
+   goes transparent and this overlay scrolls the same words right-to-left. */
+input.ph-marquee-on::placeholder { color: transparent !important; opacity: 0 !important; }
+.ph-marquee {
+  position: absolute;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+  white-space: nowrap;
+  color: rgb(var(--ed-ink-faint, 107 114 128));
+  /* Soft edges so the words slide in and out rather than being cut. */
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 12px, #000 calc(100% - 16px), transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 12px, #000 calc(100% - 16px), transparent 100%);
+}
+.ph-marquee[hidden] { display: none; }
+.ph-marquee-track {
+  display: inline-flex;
+  gap: var(--ph-gap, 48px);
+  animation: ph-marquee var(--ph-duration, 12s) linear infinite;
+  animation-delay: 1.2s; /* read the start first, then it moves */
+}
+@keyframes ph-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(var(--ph-shift, -100%)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ph-marquee-track { animation: none; }
+  .ph-marquee-track > span + span { display: none; }
+  .ph-marquee { -webkit-mask-image: none; mask-image: none; text-overflow: ellipsis; }
+}
+
+/* ==========================================================================
+   Mobile nav menu (hamburger, below 768px) - Sky style.
+   The markup is the same .ed-nav-links row the desktop uses; api.js toggles
+   .mobile-open on it. Everything here is CSS: icons are Material Symbols
+   ligatures in ::before/::after, the ☰ turns into ✕ while open, and the page
+   behind is dimmed (a click on it closes the menu - api.js's outside-click).
+   ========================================================================== */
+@media (max-width: 767px) {
+  .editorial-page .ed-hamburger-btn {
+    width: 2.25rem;
+    height: 2.25rem;
+    padding: 0;
+    border-radius: 999px;
+    border: 1px solid rgb(var(--ed-divider));
+    background: rgb(var(--ed-surface-lowest));
+    color: rgb(var(--ed-ink-soft));
+    transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  }
+  .editorial-page .ed-hamburger-btn .material-symbols-outlined { font-size: 20px; }
+  .editorial-page .ed-nav:has(.ed-nav-links.mobile-open) .ed-hamburger-btn {
+    color: rgb(var(--ed-accent));
+    border-color: rgb(var(--ed-accent) / 0.4);
+    background: rgb(var(--ed-accent) / 0.08);
+  }
+  /* ☰ -> ✕ */
+  .editorial-page .ed-nav:has(.ed-nav-links.mobile-open) .ed-hamburger-btn .material-symbols-outlined { font-size: 0; }
+  .editorial-page .ed-nav:has(.ed-nav-links.mobile-open) .ed-hamburger-btn .material-symbols-outlined::before {
+    content: 'close';
+    font-size: 20px;
+  }
+
+  /* The dimmed page behind the open menu. */
+  .editorial-page .ed-nav:has(.ed-nav-links.mobile-open)::after {
+    content: '';
+    /* .ed-nav has backdrop-filter, which makes it the containing block of its
+       fixed children - so this is sized explicitly rather than inset to the
+       viewport's bottom (the nav sits at the viewport's top-left anyway). */
+    position: fixed;
+    top: 4rem;
+    left: 0;
+    width: 100vw;
+    height: calc(100dvh - 4rem);
+    z-index: -1;
+    /* A tap on it lands on .ed-nav (its owner), which api.js's outside-click
+       listener treats as "elsewhere" and closes the menu - without the tap also
+       reaching whatever link was underneath. */
+    pointer-events: auto;
+    background: rgb(15 30 58 / 0.28);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+    animation: navmenu-fade 0.18s ease;
+  }
+  html.dark .editorial-page .ed-nav:has(.ed-nav-links.mobile-open)::after { background: rgb(0 0 0 / 0.45); }
+
+  .editorial-page .ed-nav-links.mobile-open {
+    top: 4.5rem;
+    left: 0.75rem;
+    right: 0.75rem;
+    padding: 0.5rem;
+    gap: 0.125rem;
+    border-radius: 18px;
+    box-shadow: 0 2px 6px rgb(15 30 58 / 0.06), 0 20px 48px rgb(15 30 58 / 0.18);
+    animation: navmenu-in 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+    transform-origin: top center;
+  }
+  .editorial-page .ed-nav-links.mobile-open .ed-nav-link {
+    gap: 0.75rem;
+    min-height: 3rem;
+    padding: 0 0.625rem;
+    border-radius: 12px;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: rgb(var(--ed-ink));
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+  .editorial-page .ed-nav-links.mobile-open .ed-nav-link:hover,
+  .editorial-page .ed-nav-links.mobile-open .ed-nav-link:active {
+    background: rgb(var(--ed-accent) / 0.06);
+    color: rgb(var(--ed-accent));
+  }
+  /* Icon tile ahead of each link, picked by where the link goes. */
+  .editorial-page .ed-nav-links.mobile-open .ed-nav-link::before {
+    content: 'arrow_forward';
+    font-family: 'Material Symbols Outlined';
+    font-feature-settings: 'liga';
+    font-weight: normal;
+    font-size: 19px;
+    line-height: 1;
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.125rem;
+    height: 2.125rem;
+    border-radius: 10px;
+    background: rgb(var(--ed-accent) / 0.09);
+    color: rgb(var(--ed-accent));
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+  .editorial-page .ed-nav-links.mobile-open .ed-nav-link[href="/index.html"]::before { content: 'home'; }
+  .editorial-page .ed-nav-links.mobile-open .ed-nav-link[href="/viewall.html"]::before { content: 'article'; }
+  .editorial-page .ed-nav-links.mobile-open .ed-nav-link[href="/terms.html"]::before { content: 'info'; }
+  .editorial-page .ed-nav-links.mobile-open .ed-nav-link[data-setting-mailto]::before { content: 'mail'; }
+  /* A faint arrow at the right edge: these rows go somewhere. */
+  .editorial-page .ed-nav-links.mobile-open .ed-nav-link::after {
+    content: 'arrow_forward';
+    font-family: 'Material Symbols Outlined';
+    font-feature-settings: 'liga';
+    font-weight: normal;
+    font-size: 17px;
+    line-height: 1;
+    margin-left: auto;
+    color: rgb(var(--ed-ink-faint) / 0.7);
+    transition: transform 0.15s ease, color 0.15s ease;
+  }
+  .editorial-page .ed-nav-links.mobile-open .ed-nav-link:hover::after { transform: translateX(2px); color: rgb(var(--ed-accent)); }
+  .editorial-page .ed-nav-links.mobile-open .ed-nav-link.is-active {
+    background: rgb(var(--ed-accent) / 0.1);
+    color: rgb(var(--ed-accent));
+    font-weight: 600;
+  }
+  .editorial-page .ed-nav-links.mobile-open .ed-nav-link.is-active::before,
+  .editorial-page .ed-nav-links.mobile-open .ed-nav-link:hover::before {
+    background: rgb(var(--ed-accent));
+    color: rgb(var(--ed-on-accent));
+  }
+  .editorial-page .ed-nav-links.mobile-open .ed-nav-link.is-active::after { color: rgb(var(--ed-accent)); }
+  .editorial-page .ed-nav-links.mobile-open .ed-nav-link.hidden { display: none; }
+}
+@keyframes navmenu-in {
+  from { opacity: 0; transform: translateY(-6px) scale(0.98); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes navmenu-fade { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .editorial-page .ed-nav-links.mobile-open,
+  .editorial-page .ed-nav:has(.ed-nav-links.mobile-open)::after { animation: none; }
+}
+/* The mobile menu card is as wide as its longest row (like the avatar
+   dropdown), hanging under the hamburger at the left - not the full screen. */
+@media (max-width: 767px) {
+  .editorial-page .ed-nav-links.mobile-open {
+    right: auto;
+    width: max-content;
+    min-width: 13.5rem;
+    max-width: calc(100vw - 1.5rem);
+  }
+  .editorial-page .ed-nav-links.mobile-open .ed-nav-link { padding-right: 0.75rem; }
+  .editorial-page .ed-nav-links.mobile-open .ed-nav-link::after { margin-left: auto; padding-left: 1.25rem; }
+}
+/* No trailing arrow on the mobile menu rows (user's call). */
+@media (max-width: 767px) {
+  .editorial-page .ed-nav-links.mobile-open .ed-nav-link::after { content: none; }
+}
+/* Same width as the avatar dropdown (#user-dropdown-menu: 17.5rem). */
+@media (max-width: 767px) {
+  .editorial-page .ed-nav-links.mobile-open {
+    width: 17.5rem;
+    min-width: 0;
+    max-width: calc(100vw - 1.5rem);
+  }
+}
+
+/* ---- Header search button (below 1024px, #header-search-toggle) ----
+   A framed round button like the bell and the hamburger. The glyph comes
+   from --nav-search-icon (any Material Symbols name in the subset), so it can
+   be swapped in one place without touching the eight pages' markup; while the
+   search bar is open it shows "close". */
+:root { --nav-search-icon: 'search'; }
+.editorial-page #header-search-toggle {
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid rgb(var(--ed-divider));
+  background: rgb(var(--ed-surface-lowest));
+  color: rgb(var(--ed-ink-soft));
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.editorial-page #header-search-toggle:hover {
+  color: rgb(var(--ed-accent));
+  border-color: rgb(var(--ed-accent) / 0.4);
+  background: rgb(var(--ed-accent) / 0.07);
+}
+.editorial-page #header-search-toggle .material-symbols-outlined { font-size: 0; line-height: 1; }
+.editorial-page #header-search-toggle .material-symbols-outlined::before {
+  content: var(--nav-search-icon);
+  font-size: 20px;
+}
+.editorial-page:has(#search-overlay:not(.hidden)) #header-search-toggle {
+  color: rgb(var(--ed-accent));
+  border-color: rgb(var(--ed-accent) / 0.4);
+  background: rgb(var(--ed-accent) / 0.08);
+}
+.editorial-page:has(#search-overlay:not(.hidden)) #header-search-toggle .material-symbols-outlined::before { content: 'close'; }
+
+/* ---- Search bar under the header (#search-overlay) ----
+   Tablets: the markup's `sm:hidden` kept it hidden from 640px up even after
+   the toggle removed `.hidden` - but the toggle button is shown up to 1023px,
+   so on an iPad the button did nothing. Open means open below 1024px. */
+@media (max-width: 1023px) {
+  .editorial-page #search-overlay:not(.hidden) { display: block; }
+}
+@media (min-width: 1024px) {
+  .editorial-page #search-overlay { display: none; }
+}
+/* No leading magnifier or trailing ✕ inside the open bar: the header button
+   already turned into the ✕ that closes it. The field takes the full width. */
+.editorial-page #search-overlay > div > .material-symbols-outlined,
+.editorial-page #search-overlay [data-action="search-close"] { display: none; }
+.editorial-page #search-overlay > div { gap: 0; padding-top: 0.75rem; padding-bottom: 0.75rem; }
+.editorial-page #search-overlay #search-input-mobile {
+  width: 100%;
+  height: 2.75rem;
+  padding: 0 1.125rem;
+  border: 1px solid rgb(var(--ed-divider));
+  border-radius: 999px;
+  background: rgb(var(--ed-surface-low));
+  font-size: 1rem; /* 16px: iOS Safari zooms the page into anything smaller */
+}
+.editorial-page #search-overlay #search-input-mobile:focus {
+  border-color: rgb(var(--ed-accent) / 0.6);
+  background: rgb(var(--ed-surface-lowest));
+  box-shadow: 0 0 0 3px rgb(var(--ed-accent) / 0.14);
+}
+
+/* ---- Header on tablets (iPad 10th gen: 820px portrait, 1180px landscape) ----
+   Below 1280px the row cannot hold the nav links, the search, a labelled
+   "Viết bài" pill, the bell and the avatar: the label wrapped onto two lines and
+   the avatar was pushed off the edge. There, "Viết bài" is its round icon
+   button (as on phones), the nav pills are tighter, and nothing on the right
+   is allowed to shrink. */
+.editorial-page .ed-nav .ed-nav-write { white-space: nowrap; flex: none; }
+.editorial-page .ed-nav #nav-notif-btn,
+.editorial-page .ed-nav #nav-avatar-btn,
+.editorial-page .ed-nav #header-search-toggle { flex: none; }
+@media (min-width: 640px) and (max-width: 1279px) {
+  .editorial-page .ed-nav .ed-nav-write,
+  html.dark .editorial-page .ed-nav .ed-nav-write {
+    width: 2.25rem;
+    height: 2.25rem;
+    padding: 0;
+    gap: 0;
+    justify-content: center;
+    font-size: 0;
+    background: rgb(var(--ed-surface-lowest));
+    border: 1px solid rgb(var(--ed-divider));
+    color: rgb(var(--ed-ink-soft));
+    box-shadow: none;
+    filter: none;
+    transform: none;
+  }
+  .editorial-page .ed-nav .ed-nav-write .material-symbols-outlined { font-size: 20px; }
+  .editorial-page .ed-nav .ed-nav-write:hover,
+  html.dark .editorial-page .ed-nav .ed-nav-write:hover {
+    background: rgb(var(--ed-accent) / 0.07);
+    border-color: rgb(var(--ed-accent) / 0.4);
+    color: rgb(var(--ed-accent));
+  }
+}
+@media (min-width: 768px) and (max-width: 1279px) {
+  .editorial-page .ed-nav-links { gap: 0.125rem; }
+  .editorial-page .ed-nav-link { padding: 0 0.625rem; }
+  .editorial-page .ed-nav > div { gap: 1rem; }
+  .editorial-page .ed-nav > div > div:first-child { gap: 1rem; min-width: 0; }
+}
+
+/* ---- Markdown in comments (post.js renderCommentMarkdown) ---- */
+.editorial-page .comment-md { color: rgb(var(--ed-ink)); line-height: 1.6; }
+.editorial-page .comment-md > * + * { margin-top: 0.5rem; }
+.editorial-page .comment-md p { margin: 0; }
+.editorial-page .comment-md > p + p { margin-top: 0.5rem; }
+.editorial-page .comment-md strong { font-weight: 700; }
+.editorial-page .comment-md a { color: rgb(var(--ed-accent)); text-decoration: underline; text-underline-offset: 2px; overflow-wrap: anywhere; }
+.editorial-page .comment-md code {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.85em;
+  padding: 0.1em 0.4em;
+  border-radius: 5px;
+  background: rgb(var(--ed-accent) / 0.08);
+  color: rgb(var(--ed-accent));
+}
+.editorial-page .comment-md pre {
+  margin: 0.5rem 0 0;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  background: #1e293b;
+  color: #cbd5e1;
+  overflow-x: auto;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+}
+.editorial-page .comment-md pre code { padding: 0; background: none; color: inherit; font-size: inherit; }
+.editorial-page .comment-md ul,
+.editorial-page .comment-md ol { margin: 0.25rem 0 0; padding-left: 1.375rem; }
+.editorial-page .comment-md ul { list-style: disc; }
+.editorial-page .comment-md ol { list-style: decimal; }
+.editorial-page .comment-md li + li { margin-top: 0.125rem; }
+.editorial-page .comment-md blockquote {
+  margin: 0.5rem 0 0;
+  padding: 0.375rem 0.875rem;
+  border-left: 3px solid rgb(var(--ed-accent) / 0.5);
+  border-radius: 0 8px 8px 0;
+  background: rgb(var(--ed-accent) / 0.05);
+  color: rgb(var(--ed-ink-soft));
+}
+.editorial-page .comment-md blockquote::before,
+.editorial-page .comment-md blockquote::after { content: none; }
+.editorial-page .comment-md hr { margin: 0.75rem 0; border: 0; border-top: 1px solid rgb(var(--ed-divider)); }
+.editorial-page .comment-md .md-h { font-size: 1.0625em; }
+.editorial-page .comment-md .md-h1 { font-size: 1.15em; }
+.editorial-page .comment-md .md-table { overflow-x: auto; margin-top: 0.5rem; }
+.editorial-page .comment-md table { border-collapse: collapse; font-size: 0.875rem; min-width: 60%; }
+.editorial-page .comment-md th,
+.editorial-page .comment-md td { border: 1px solid rgb(var(--ed-divider)); padding: 0.375rem 0.625rem; text-align: left; }
+.editorial-page .comment-md th { background: rgb(var(--ed-surface)); font-weight: 600; }
+.editorial-page .comment-md-empty { color: rgb(var(--ed-ink-faint)); font-style: italic; }
+
+/* The comment / reply box: grows with pasted Markdown, keeps indentation. */
+.editorial-page .md-input {
+  resize: vertical;
+  tab-size: 4;
+  line-height: 1.55;
+  max-height: 60vh;
+}
+.editorial-page .md-input.hidden { display: none; }
+.editorial-page .comment-md-preview {
+  padding: 0.875rem 1rem;
+  border: 1px dashed rgb(var(--ed-accent) / 0.35);
+  border-radius: 12px;
+  background: rgb(var(--ed-surface-lowest));
+}
+.editorial-page .comment-md-preview.hidden { display: none; }
+.editorial-page .comment-md-help {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  font-family: var(--font-vi-sans);
+  font-size: 0.75rem;
+  line-height: 1.7;
+  color: rgb(var(--ed-ink-faint));
+}
+.editorial-page .comment-md-help.hidden { display: none; }
+.editorial-page .comment-md-badge {
+  flex: none;
+  padding: 0 0.375rem;
+  border: 1px solid rgb(var(--ed-divider));
+  border-radius: 5px;
+  font-weight: 700;
+  font-size: 0.6875rem;
+  color: rgb(var(--ed-ink-soft));
+}
+.editorial-page .comment-md-tips { flex: 1 1 auto; min-width: 0; }
+.editorial-page .comment-md-tips code {
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.6875rem;
+  padding: 0.05em 0.35em;
+  margin-right: 0.125rem;
+  border-radius: 4px;
+  background: rgb(var(--ed-surface));
+  color: rgb(var(--ed-ink-soft));
+  white-space: nowrap;
+}
+.editorial-page .comment-md-preview-btn {
+  flex: none;
+  padding: 0.125rem 0.75rem;
+  border: 1px solid rgb(var(--ed-divider));
+  border-radius: 999px;
+  background: rgb(var(--ed-surface-lowest));
+  color: rgb(var(--ed-ink-soft));
+  font-weight: 600;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
+}
+.editorial-page .comment-md-preview-btn:hover,
+.editorial-page .comment-md-preview-btn[aria-pressed="true"] {
+  border-color: rgb(var(--ed-accent) / 0.5);
+  color: rgb(var(--ed-accent));
+  background: rgb(var(--ed-accent) / 0.06);
+}
+@media (max-width: 639px) {
+  .editorial-page .comment-md-help { flex-wrap: wrap; }
+  .editorial-page .comment-md-tips { flex-basis: calc(100% - 2.5rem); }
+}
+
+/* ==========================================================================
+   Đăng nhập / Đăng ký (#auth-modal, built by js/api.js) - Sky style.
+   Desktop & tablet: a centred rounded card over a blurred page.
+   Phones: a bottom sheet that slides up, with a grab handle, and room for the
+   home indicator. Every step (email, password, register, verify, reset,
+   Google) shares these rules.
+   ========================================================================== */
+.editorial-page #auth-modal {
+  background: rgb(15 30 58 / 0.4);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+html.dark .editorial-page #auth-modal { background: rgb(0 0 0 / 0.55); }
+.editorial-page #auth-modal .auth-card {
+  max-width: 26rem;
+  border-radius: 22px;
+  border: 1px solid rgb(var(--ed-divider));
+  background: rgb(var(--ed-surface-lowest));
+  box-shadow: 0 2px 8px rgb(15 30 58 / 0.06), 0 28px 70px rgb(15 30 58 / 0.25);
+  font-family: var(--font-vi-sans);
+}
+html.dark .editorial-page #auth-modal .auth-card { box-shadow: 0 28px 70px rgb(0 0 0 / 0.5); }
+.editorial-page #auth-modal .auth-card > div { padding: 1.75rem 1.75rem 1.5rem; }
+
+/* Header: icon tile, brand pill, title, subtitle, round close button. */
+.editorial-page #auth-modal .auth-card > div > .flex:first-child { margin-bottom: 1.5rem; }
+.editorial-page #auth-modal .auth-card > div > .flex:first-child > div::before {
+  content: 'key';
+  font-family: 'Material Symbols Outlined';
+  font-feature-settings: 'liga';
+  font-size: 24px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  margin-bottom: 1rem;
+  border-radius: 14px;
+  background: rgb(var(--ed-accent) / 0.1);
+  color: rgb(var(--ed-accent));
+}
+.editorial-page #auth-modal [data-brand-name] {
+  display: inline-block;
+  padding: 0.125rem 0.625rem;
+  border-radius: 999px;
+  background: rgb(var(--ed-accent) / 0.08);
+  color: rgb(var(--ed-accent));
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+.editorial-page #auth-modal #auth-heading {
+  margin-top: 0.5rem;
+  font-family: var(--font-vi-sans);
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: rgb(var(--ed-ink));
+}
+.editorial-page #auth-modal #auth-subheading { color: rgb(var(--ed-ink-soft)); font-size: 0.875rem; margin-top: 0.375rem; }
+.editorial-page #auth-modal [data-action="auth-close"] {
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 1px solid rgb(var(--ed-divider));
+  background: rgb(var(--ed-surface-lowest));
+  color: rgb(var(--ed-ink-soft));
+}
+.editorial-page #auth-modal [data-action="auth-close"]:hover {
+  border-color: rgb(var(--ed-accent) / 0.4);
+  background: rgb(var(--ed-accent) / 0.07);
+  color: rgb(var(--ed-accent));
+}
+
+/* Fields */
+.editorial-page #auth-modal .auth-field > label {
+  font-family: var(--font-vi-sans);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: rgb(var(--ed-ink-faint));
+}
+.editorial-page #auth-modal .auth-input {
+  border-radius: 12px;
+  border: 1px solid rgb(var(--ed-divider));
+  background: rgb(var(--ed-surface-low));
+  color: rgb(var(--ed-ink));
+  font-size: 1rem; /* 16px: iOS does not zoom into the field */
+  transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+}
+.editorial-page #auth-modal .auth-input::placeholder { color: rgb(var(--ed-ink-faint) / 0.75); }
+.editorial-page #auth-modal .auth-input:hover { border-color: rgb(var(--ed-accent) / 0.35); }
+.editorial-page #auth-modal .auth-input:focus {
+  border-color: rgb(var(--ed-accent) / 0.6);
+  background: rgb(var(--ed-surface-lowest));
+  box-shadow: 0 0 0 3px rgb(var(--ed-accent) / 0.14);
+}
+.editorial-page #auth-modal .auth-field > .material-symbols-outlined { color: rgb(var(--ed-ink-faint)); }
+.editorial-page #auth-modal .auth-field:focus-within > .material-symbols-outlined { color: rgb(var(--ed-accent)); }
+
+/* Primary button */
+.editorial-page #auth-modal .auth-submit {
+  height: 3rem;
+  border-radius: 12px;
+  background: rgb(var(--ed-accent));
+  color: rgb(var(--ed-on-accent));
+  font-size: 0.9375rem;
+  font-weight: 700;
+  box-shadow: 0 6px 18px rgb(var(--ed-accent) / 0.28);
+  transition: filter 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+.editorial-page #auth-modal .auth-submit:hover {
+  background: rgb(var(--ed-accent));
+  filter: brightness(1.07);
+  box-shadow: 0 8px 22px rgb(var(--ed-accent) / 0.34);
+  transform: translateY(-1px);
+}
+.editorial-page #auth-modal .auth-submit:disabled { filter: none; transform: none; box-shadow: none; opacity: 0.6; }
+
+/* The chip echoing the email, the info notes and the error line. */
+.editorial-page #auth-modal #auth-identity {
+  padding: 0.5rem 0.625rem 0.5rem 0.875rem;
+  border-radius: 999px;
+  border: 1px solid rgb(var(--ed-accent) / 0.2);
+  background: rgb(var(--ed-accent) / 0.06);
+}
+.editorial-page #auth-modal #auth-identity > .material-symbols-outlined { color: rgb(var(--ed-accent)); }
+.editorial-page #auth-modal #auth-change-email {
+  padding: 0.25rem 0.625rem;
+  border-radius: 999px;
+  background: rgb(var(--ed-surface-lowest));
+  border: 1px solid rgb(var(--ed-divider));
+  color: rgb(var(--ed-accent));
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+.editorial-page #auth-modal #auth-change-email:hover { border-color: rgb(var(--ed-accent) / 0.5); }
+.editorial-page #auth-modal form > p.flex,
+.editorial-page #auth-modal [id^="auth-step-"] > p.flex {
+  padding: 0.75rem 0.875rem;
+  border-radius: 12px;
+  border: 1px solid rgb(var(--ed-accent) / 0.15);
+  background: rgb(var(--ed-accent) / 0.07);
+  color: rgb(var(--ed-ink));
+  line-height: 1.5;
+}
+.editorial-page #auth-modal form > p.flex > .material-symbols-outlined,
+.editorial-page #auth-modal [id^="auth-step-"] > p.flex > .material-symbols-outlined { color: rgb(var(--ed-accent)); }
+.editorial-page #auth-modal #auth-error {
+  border-radius: 12px;
+  border: 1px solid rgb(220 38 38 / 0.2);
+  background: rgb(220 38 38 / 0.07);
+  color: #b91c1c;
+}
+html.dark .editorial-page #auth-modal #auth-error { color: #fca5a5; }
+.editorial-page #auth-modal #auth-forgot-link,
+.editorial-page #auth-modal #auth-verify-resend,
+.editorial-page #auth-modal #auth-google-use-password { color: rgb(var(--ed-accent)); font-weight: 600; }
+
+/* "Hoặc" + Google */
+.editorial-page #auth-modal #auth-google-block .border-t { border-color: rgb(var(--ed-divider)); }
+.editorial-page #auth-modal #auth-google-block span.uppercase {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: rgb(var(--ed-ink-faint));
+}
+.editorial-page #auth-modal #auth-google-block a {
+  height: 3rem;
+  border-radius: 12px;
+  border: 1px solid rgb(var(--ed-divider));
+  background: rgb(var(--ed-surface-lowest));
+  color: rgb(var(--ed-ink));
+  font-weight: 600;
+  font-size: 0.9375rem;
+  transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+}
+.editorial-page #auth-modal #auth-google-block a:hover {
+  border-color: rgb(var(--ed-accent) / 0.45);
+  background: rgb(var(--ed-accent) / 0.04);
+  box-shadow: 0 4px 14px rgb(15 30 58 / 0.06);
+}
+
+/* Phones: bottom sheet. */
+@media (max-width: 639px) {
+  .editorial-page #auth-modal:not(.hidden) { align-items: flex-end; padding: 0; }
+  .editorial-page #auth-modal .auth-card {
+    max-width: none;
+    margin: 0;
+    max-height: 92dvh;
+    overflow-y: auto;
+    border-radius: 24px 24px 0 0;
+    border-bottom: 0;
+    animation: auth-sheet-in 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .editorial-page #auth-modal .auth-card > div { padding: 1.75rem 1.25rem calc(1.25rem + env(safe-area-inset-bottom)); }
+  /* Grab handle */
+  .editorial-page #auth-modal .auth-card > div::before {
+    content: '';
+    position: absolute;
+    top: 0.625rem;
+    left: 50%;
+    width: 2.5rem;
+    height: 4px;
+    margin-left: -1.25rem;
+    border-radius: 999px;
+    background: rgb(var(--ed-divider));
+  }
+  .editorial-page #auth-modal .auth-card > div > .flex:first-child > div::before { width: 2.75rem; height: 2.75rem; margin-bottom: 0.75rem; }
+  .editorial-page #auth-modal #auth-heading { font-size: 1.375rem; }
+}
+@keyframes auth-sheet-in {
+  from { transform: translateY(100%); }
+  to { transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .editorial-page #auth-modal .auth-card { animation: none; }
+  .editorial-page #auth-modal .auth-submit:hover { transform: none; }
+}
+
+/* profile.html: the owner buttons ship with .hidden and profile.js removes it
+   only on the reader's own profile. Needed because .profile-photo-btn's own
+   display:flex would otherwise beat the one-class .hidden utility. */
+.editorial-page .profile-photo-btn.hidden { display: none; }
+
+/* ==========================================================================
+   STANDARD LAYOUT (2026-10-04) - see the "Bố cục chuẩn" reference.
+   Backup of everything before this pass: backups/before-standard-layout-20261004
+   ========================================================================== */
+
+/* ---- Footer (every page): brand · links · copyright, flat on the page ---- */
+.editorial-page .ed-footer { padding: 0; margin-top: auto; }
+.editorial-page .site-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1.5rem;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+  font-family: var(--font-vi-sans);
+  font-size: 0.875rem;
+  color: rgb(var(--ed-ink-faint));
+}
+.editorial-page .site-footer-brand {
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: rgb(var(--ed-ink));
+}
+.editorial-page .site-footer-links { display: flex; flex-wrap: wrap; gap: 0.25rem 1.25rem; }
+.editorial-page .site-footer-links a { color: rgb(var(--ed-ink-soft)); cursor: pointer; }
+.editorial-page .site-footer-links a:hover { color: rgb(var(--ed-accent)); }
+.editorial-page .site-footer-links a.hidden { display: none; }
+@media (max-width: 639px) {
+  .editorial-page .site-footer { flex-direction: column; text-align: center; padding-top: 1.5rem; }
+  .editorial-page .site-footer-links { justify-content: center; }
+}
+
+/* ---- Trang chủ: split hero, newest grid + "Xem tất cả", "Đọc nhiều nhất" ---- */
+.editorial-page #latest-grid:not(.hidden) { display: block; }
+.editorial-page .home-hero { display: grid; gap: 1.25rem; }
+.editorial-page .home-hero .ed-lead-media { border-radius: 16px; }
+@media (min-width: 768px) {
+  .editorial-page .home-hero {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    gap: 2.5rem;
+    align-items: center;
+  }
+}
+.editorial-page .home-hero .ed-hero-title {
+  font-size: clamp(1.75rem, 3.2vw, 2.5rem);
+  line-height: 1.2;
+}
+.editorial-page .home-hero .ed-byline-strip { padding: 0.75rem 1rem; }
+.editorial-page .home-more-cta { display: flex; justify-content: center; margin-top: 2rem; }
+.editorial-page .home-more-btn {
+  display: inline-flex;
+  align-items: center;
+  height: 2.75rem;
+  padding: 0 1.5rem;
+  border-radius: 999px;
+  border: 1px solid rgb(var(--ed-divider));
+  background: rgb(var(--ed-surface-lowest));
+  color: rgb(var(--ed-ink));
+  font-family: var(--font-vi-sans);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
+}
+.editorial-page .home-more-btn:hover {
+  border-color: rgb(var(--ed-accent) / 0.5);
+  color: rgb(var(--ed-accent));
+  background: rgb(var(--ed-accent) / 0.05);
+}
+.editorial-page .home-mostread-list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+@media (min-width: 768px) {
+  .editorial-page .home-mostread-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+.editorial-page .home-mostread-list > .ed-story-item,
+.editorial-page .home-mostread-list > .ed-story-item + .ed-story-item {
+  margin: 0;
+  padding: 1rem;
+  border: 1px solid rgb(var(--ed-divider));
+  border-radius: 14px;
+  background: rgb(var(--ed-surface-lowest));
+  align-items: center;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.editorial-page .home-mostread-list > .ed-story-item:hover {
+  border-color: rgb(var(--ed-accent) / 0.3);
+  box-shadow: 0 6px 18px rgb(15 30 58 / 0.07);
+}
+/* the rank tiles were scoped to the old rail id; same look here */
+.editorial-page .home-mostread-list .ed-story-item > .ed-mono {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 12px;
+  background: rgb(var(--ed-accent) / 0.09);
+  color: rgb(var(--ed-accent));
+  font-family: var(--font-vi-sans);
+  font-size: 1rem !important;
+  font-weight: 800;
+}
+
+/* ---- Trang đọc bài ----
+   Reading area 1080px wide, centred: title block, cover as wide as that area,
+   then the text column (~750px) with the sticky table of contents (280px)
+   beside it; related posts as a row of three; comments in the text column. */
+.editorial-page #post-article { width: 100%; max-width: 1080px; margin: 0 auto; --reading-sidebar: 17.5rem; --reading-gap: 3rem; }
+.editorial-page #post-content > .post-meta { margin-bottom: 0.25rem; }
+.editorial-page .post-meta .ed-hero-title { font-size: clamp(1.875rem, 3.6vw, 2.625rem); line-height: 1.2; }
+@media (min-width: 1024px) {
+  .editorial-page #post-article .post-layout,
+  .editorial-page #post-article .post-comments {
+    grid-template-columns: minmax(0, 1fr) var(--reading-sidebar);
+    column-gap: var(--reading-gap);
+  }
+}
+/* The sidebar is the table of contents now: it collapses when there is no TOC
+   (fewer than three headings), not when there are no suggestions. */
+.editorial-page #post-article:has(.related-section.hidden) .post-layout,
+.editorial-page #post-article:has(.related-section.hidden) .post-comments { grid-template-columns: minmax(0, 1fr) var(--reading-sidebar); }
+.editorial-page .post-sidebar:has(.related-section.hidden) { display: block; }
+@media (min-width: 1024px) {
+  .editorial-page #post-article:has(#toc-section.hidden) .post-layout,
+  .editorial-page #post-article:has(#toc-section.hidden) .post-comments { grid-template-columns: minmax(0, 1fr); }
+}
+.editorial-page .post-sidebar:has(#toc-section.hidden) { display: none; }
+@media (max-width: 1023px) {
+  .editorial-page #post-article .post-layout,
+  .editorial-page #post-article .post-comments { grid-template-columns: minmax(0, 1fr); }
+}
+/* Body text 17px / 1.75, regular weight (user asked for lighter, smaller
+   text on 2026-10-04; it was 18px / 500). Bold stays a clear step above. */
+.editorial-page #post-content .prose-content { font-size: 1.0625rem; line-height: 1.75; }
+.editorial-page #post-content .prose-content :is(p, li, td, blockquote, dd) { font-weight: 400; }
+.editorial-page #post-content .prose-content :is(p, li) { font-size: 1.0625rem; }
+.editorial-page #post-content .prose-content :is(p, li, td, blockquote, dd) :is(strong, b) { font-weight: 600; }
+/* Code pasted line-by-line arrives as one <p>/<div> per line inside <pre>:
+   those must not pick up the paragraph gap, size or line height above, or
+   every line of the terminal block sits a paragraph apart. */
+.editorial-page #post-content .prose-content pre :is(p, div) {
+  margin: 0;
+  padding: 0;
+  font-size: inherit;
+  line-height: inherit;
+  font-weight: inherit;
+}
+
+/* Related: a row of three cards. */
+.editorial-page #post-content .related-section:not(.hidden) {
+  margin-top: 2.5rem;
+  padding: 1.5rem;
+}
+.editorial-page #post-content .related-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.75rem;
+}
+@media (min-width: 640px) {
+  .editorial-page #post-content .related-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+.editorial-page #post-content .related-card { height: 100%; align-items: flex-start; }
+
+/* Phones & tablets: the table of contents comes BEFORE the text (right after
+   the cover), collapsed to its title until tapped (post.js .is-collapsed). */
+@media (max-width: 1023px) {
+  .editorial-page .post-sidebar { order: -1; margin-top: 0; }
+  .editorial-page #toc-section .ed-kicker {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0;
+    cursor: pointer;
+  }
+  .editorial-page #toc-section .ed-kicker::after {
+    content: 'expand_more';
+    font-family: 'Material Symbols Outlined';
+    font-feature-settings: 'liga';
+    font-size: 22px;
+    font-weight: normal;
+    color: rgb(var(--ed-ink-faint));
+    transition: transform 0.2s ease;
+  }
+  .editorial-page #toc-section:not(.is-collapsed) .ed-kicker::after { transform: rotate(180deg); }
+  .editorial-page #toc-section:not(.is-collapsed) #toc-list { margin-top: 0.5rem; }
+  .editorial-page #toc-section.is-collapsed #toc-list { display: none; }
+}
+
+/* Phone dock removed at user request (2026-10-05): on phones the like /
+   dislike / back-to-top row sits at the end of the article again, like on
+   desktop. The dock-only share button stays hidden (sharing lives in the
+   .post-share-bar card). */
+.editorial-page #post-content .dock-share-btn { display: none; }
+/* Phones (user, 2026-10-05): the end-of-article row trades the "Về đầu trang"
+   pill for the share circles (Facebook / X / LinkedIn / copy link) - post.js
+   moves .post-share-links up into the row; the card below keeps the tags.
+   The back-to-top element only appears as the floating round button. */
+@media (max-width: 767px) {
+  .editorial-page #post-content .ed-action-bar .to-top-btn:not(.to-top-btn--floating) { display: none; }
+  .editorial-page #post-content .ed-action-bar .post-share-links {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    margin: 0 0 0 auto;
+  }
+  .editorial-page #post-content .ed-action-bar .post-share-links .post-share-label { display: none; }
+  .editorial-page #post-content .ed-action-bar .post-share-btn { width: 2.25rem; height: 2.25rem; }
+  .editorial-page #post-content .ed-action-bar .post-share-btn svg { width: 1rem; height: 1rem; }
+  .editorial-page #post-content .ed-action-bar .post-share-btn .material-symbols-outlined { font-size: 1.125rem; }
+  /* The tags card without its share half: no gap left behind. */
+  .editorial-page #post-content .post-share-bar:not(:has(.post-share-links)) { gap: 0; }
+  .editorial-page #post-content .post-share-bar:not(:has(.post-share-links)):has(#post-tags-wrap.hidden) { display: none; }
+}
+
+/* ---- Tất cả bài viết: title + search on one row, filter chips, a list of
+   posts with the picture at the left and the text at the right, pager ---- */
+.editorial-page .viewall-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+}
+.editorial-page .viewall-head #search-wrap { flex: none; }
+@media (max-width: 767px) {
+  .editorial-page .viewall-head #search-wrap { width: 100%; }
+}
+.editorial-page #filter-search {
+  margin-top: 1.25rem;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1.5rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+}
+.editorial-page #filter-search > div { padding: 0 !important; border: 0 !important; }
+.editorial-page #filter-search > div:first-child { flex: 1 1 auto; min-width: 0; }
+.editorial-page #tag-dropdown { display: none; }
+/* Phones: the tag filter goes back to the dropdown (user, 2026-10-05) - the
+   chip row wrapped onto several lines there. viewall.js keeps both in sync. */
+@media (max-width: 767px) {
+  .editorial-page #tag-chips { display: none; }
+  .editorial-page #tag-dropdown { display: block; }
+  .editorial-page #viewall-tag-label,
+  .editorial-page #viewall-tag-menu .ed-inline-dd-option { text-transform: uppercase; }
+}
+.editorial-page .viewall-chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.editorial-page .viewall-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  height: 2.25rem;
+  padding: 0 0.875rem;
+  border-radius: 999px;
+  border: 1px solid rgb(var(--ed-divider));
+  background: rgb(var(--ed-surface-lowest));
+  color: rgb(var(--ed-ink-soft));
+  font-family: var(--font-vi-sans);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
+}
+.editorial-page .viewall-chip:hover { border-color: rgb(var(--ed-accent) / 0.5); color: rgb(var(--ed-accent)); }
+.editorial-page .viewall-chip.is-active {
+  border-color: rgb(var(--ed-accent));
+  background: rgb(var(--ed-accent));
+  color: rgb(var(--ed-on-accent));
+}
+.editorial-page .viewall-chip-count {
+  padding: 0 0.375rem;
+  border-radius: 999px;
+  background: rgb(var(--ed-accent) / 0.1);
+  color: rgb(var(--ed-accent));
+  font-size: 0.6875rem;
+}
+.editorial-page .viewall-chip.is-active .viewall-chip-count { background: rgb(255 255 255 / 0.22); color: inherit; }
+
+/* The list */
+.editorial-page #viewall-grid { grid-template-columns: minmax(0, 1fr); gap: 1rem; }
+@media (min-width: 640px) {
+  .editorial-page #viewall-grid > article {
+    flex-direction: row;
+    align-items: stretch;
+  }
+  .editorial-page #viewall-grid > article > div:first-child {
+    width: 17rem;
+    height: auto;
+    min-height: 11rem;
+    aspect-ratio: auto;
+  }
+  .editorial-page #viewall-grid > article > div:last-child { padding: 1.25rem 1.5rem; justify-content: center; }
+  .editorial-page #viewall-grid .ed-story-title--sm { font-size: 1.1875rem; }
+}
+@media (min-width: 640px) and (max-width: 639px) { }
+/* The card thumbnail inset rule from the phone pass only applies on phones. */
+
+/* ---- Trang viết bài: title row, block toolbar, Soạn thảo | Xem trước | Cài
+   đặt, status bar ---- */
+.editorial-page #editor-main.rt-canvas { max-width: 1280px; }
+.editorial-page #post-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "title" "rail" "editor" "preview" "side" "status";
+  gap: 1.25rem;
+  align-items: start;
+}
+.editorial-page #post-form > .rt-title-row { grid-area: title; padding: 0.75rem 1.5rem; }
+/* The bar spans only the editor (+ preview) columns: it and the settings
+   column both stick at 88px, so spanning under the settings column hid its
+   right end (and the Xem trước button) behind those cards while scrolling. */
+.editorial-page #post-form > .rt-rail { grid-area: rail; width: auto; z-index: 20; }
+.editorial-page #post-form > .rt-editor-col { grid-area: editor; width: auto; }
+.editorial-page #post-form > .rt-preview-col { grid-area: preview; display: none; min-width: 0; }
+.editorial-page #post-form > .rt-side-col { grid-area: side; width: auto; }
+/* Only as wide as its text, and kept out of the settings column it used to
+   slide over while sticky at the bottom. */
+.editorial-page #post-form > .rt-statusbar { grid-area: status; justify-self: start; width: max-content; max-width: 100%; }
+@media (min-width: 1024px) {
+  .editorial-page #post-form {
+    grid-template-columns: minmax(0, 1fr) 19rem;
+    grid-template-areas: "title title" "rail side" "editor side" "status side";
+    /* The settings column spans these rows; its extra height goes to the last
+       one, not into a gap under the Thêm khối bar. */
+    grid-template-rows: auto auto auto 1fr;
+  }
+  .editorial-page #post-form.is-previewing {
+    grid-template-areas: "title title" "rail side" "editor side" "preview side" "status side";
+    grid-template-rows: auto auto auto auto 1fr;
+  }
+  .editorial-page #post-form > .rt-side-col { position: sticky; top: 5rem; }
+}
+/* Preview column only while "Xem trước" is on (write.js #preview-toggle). */
+.editorial-page #post-form.is-previewing > .rt-preview-col { display: block; }
+@media (min-width: 1280px) {
+  .editorial-page #post-form.is-previewing {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr) 18rem;
+    grid-template-areas: "title title title" "rail rail side" "editor preview side" "status status side";
+    grid-template-rows: auto auto auto 1fr;
+  }
+  .editorial-page #post-form.is-previewing > .rt-preview-col { position: sticky; top: 5rem; }
+}
+.editorial-page #post-form > .rt-rail .rt-preview-toggle { margin-left: auto; }
+.editorial-page #post-form > .rt-rail .rt-preview-toggle[aria-pressed="true"] {
+  border-color: rgb(var(--ed-accent) / 0.5);
+  background: rgb(var(--ed-accent) / 0.08);
+  color: rgb(var(--ed-accent));
+}
+.editorial-page .rt-title-row #post-title-input { font-size: clamp(1.5rem, 2.6vw, 2.125rem) !important; }
+
+/* The block toolbar: one horizontal row of tools. */
+.editorial-page #post-form > .rt-rail > .ed-panel {
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.5rem;
+  padding: 0.625rem 0.875rem;
+}
+.editorial-page #post-form > .rt-rail .ed-section-title {
+  margin: 0;
+  padding: 0 0.25rem 0 0;
+  border: 0;
+  font-size: 0.75rem !important;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgb(var(--ed-ink-faint));
+}
+.editorial-page #post-form > .rt-rail .rt-add-group {
+  display: flex;
+  flex-direction: row !important;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  width: auto !important;
+}
+.editorial-page #post-form > .rt-rail .rt-add-btn {
+  width: auto;
+  border: 1px solid rgb(var(--ed-divider));
+  border-radius: 999px;
+  padding: 0.25rem 0.875rem 0.25rem 0.3125rem;
+  background: rgb(var(--ed-surface-lowest));
+}
+.editorial-page #post-form > .rt-rail .rt-add-btn > .material-symbols-outlined { width: 1.75rem; height: 1.75rem; border-radius: 999px; font-size: 17px; }
+
+/* Live preview */
+.editorial-page .rt-live-preview {
+  max-height: calc(100vh - 10rem);
+  overflow-y: auto;
+  padding-right: 0.25rem;
+  font-family: var(--font-vi-sans);
+  color: rgb(var(--ed-ink));
+}
+.editorial-page .rt-live-title { font-size: 1.5rem; font-weight: 800; line-height: 1.25; letter-spacing: -0.02em; margin-bottom: 0.5rem; }
+.editorial-page .rt-live-excerpt {
+  margin-bottom: 1rem;
+  padding-left: 0.75rem;
+  border-left: 3px solid rgb(var(--ed-accent));
+  color: rgb(var(--ed-ink-soft));
+  font-size: 0.9375rem;
+}
+.editorial-page .rt-live-preview .prose-content { font-size: 0.9375rem; line-height: 1.7; }
+.editorial-page .rt-live-preview .prose-content img { max-width: 100%; height: auto; border-radius: 10px; }
+.editorial-page .rt-live-empty { color: rgb(var(--ed-ink-faint)); font-size: 0.875rem; font-style: italic; margin: 0.5rem 0; }
+
+/* Status bar, docked at the bottom of the screen. */
+.editorial-page .rt-statusbar {
+  position: sticky;
+  bottom: 0.75rem;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  border: 1px solid rgb(var(--ed-divider));
+  background: rgb(var(--ed-surface-lowest) / 0.94);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 6px 20px rgb(15 30 58 / 0.08);
+  font-size: 0.8125rem;
+  color: rgb(var(--ed-ink-faint));
+}
+.editorial-page .rt-statusbar > .material-symbols-outlined { font-size: 18px; color: rgb(var(--ed-accent)); }
+.editorial-page .rt-statusbar p { margin: 0; }
+.editorial-page .rt-statusbar-sep { width: 1px; height: 1rem; background: rgb(var(--ed-divider)); }
+.editorial-page .rt-statusbar p:empty,
+.editorial-page .rt-statusbar p:empty ~ * { display: none; }
+
+/* ---- Lưu trữ (archive.html): year > month > post tree ---- */
+.editorial-page .archive-wrap { max-width: 860px; margin: 0 auto; }
+.editorial-page .archive-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.editorial-page .archive-summary { margin-top: 0.375rem; color: rgb(var(--ed-ink-soft)); font-size: 0.9375rem; }
+.editorial-page .archive-tools { display: flex; gap: 0.5rem; }
+.editorial-page .archive-tools.hidden { display: none; }
+.editorial-page .archive-tool {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  height: 2.25rem;
+  padding: 0 0.875rem 0 0.625rem;
+  border-radius: 999px;
+  border: 1px solid rgb(var(--ed-divider));
+  background: rgb(var(--ed-surface-lowest));
+  color: rgb(var(--ed-ink-soft));
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.editorial-page .archive-tool:hover { border-color: rgb(var(--ed-accent) / 0.5); color: rgb(var(--ed-accent)); }
+.editorial-page .archive-tool .material-symbols-outlined { font-size: 18px; }
+.editorial-page .archive-tree { display: flex; flex-direction: column; gap: 0.75rem; }
+
+.editorial-page .archive-year {
+  border: 1px solid rgb(var(--ed-divider));
+  border-radius: 16px;
+  background: rgb(var(--ed-surface-lowest));
+  overflow: hidden;
+}
+html:not(.dark) .editorial-page .archive-year { box-shadow: 0 1px 2px rgb(15 30 58 / 0.04), 0 4px 16px rgb(15 30 58 / 0.05); }
+.editorial-page .archive-tree summary {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+.editorial-page .archive-tree summary::-webkit-details-marker { display: none; }
+.editorial-page .archive-year > summary { padding: 0.875rem 1.125rem; font-size: 1.0625rem; font-weight: 800; color: rgb(var(--ed-ink)); }
+.editorial-page .archive-year > summary:hover { background: rgb(var(--ed-accent) / 0.04); }
+.editorial-page .archive-icon {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 9px;
+  font-size: 18px;
+  background: rgb(var(--ed-accent) / 0.1);
+  color: rgb(var(--ed-accent));
+}
+/* An open folder shows as open. */
+.editorial-page details[open] > summary > .archive-icon { font-size: 0; }
+.editorial-page details[open] > summary > .archive-icon::before { content: 'folder_open'; font-size: 18px; }
+.editorial-page .archive-label { flex: 1 1 auto; min-width: 0; }
+.editorial-page .archive-count {
+  flex: none;
+  padding: 0.125rem 0.625rem;
+  border-radius: 999px;
+  background: rgb(var(--ed-surface-low));
+  color: rgb(var(--ed-ink-faint));
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+/* Chevron at the right of every node. */
+.editorial-page .archive-tree summary::after {
+  content: 'expand_more';
+  font-family: 'Material Symbols Outlined';
+  font-feature-settings: 'liga';
+  font-weight: normal;
+  font-size: 20px;
+  color: rgb(var(--ed-ink-faint));
+  transition: transform 0.2s ease;
+}
+.editorial-page .archive-tree details[open] > summary::after { transform: rotate(180deg); }
+
+/* Months: an indented branch with a guide line. */
+.editorial-page .archive-months {
+  margin: 0 1.125rem 0.875rem 2.125rem;
+  padding-left: 1rem;
+  border-left: 2px solid color-mix(in srgb, rgb(var(--ed-accent)) 22%, rgb(var(--ed-surface-lowest)));
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.editorial-page .archive-month > summary {
+  padding: 0.5rem 0.625rem;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.9375rem;
+  color: rgb(var(--ed-ink));
+}
+.editorial-page .archive-month > summary:hover { background: rgb(var(--ed-accent) / 0.05); }
+.editorial-page .archive-month .archive-icon { width: 1.75rem; height: 1.75rem; border-radius: 8px; }
+.editorial-page .archive-posts {
+  list-style: none;
+  margin: 0.125rem 0 0.5rem 1.5rem;
+  padding: 0 0 0 1rem;
+  border-left: 2px solid rgb(var(--ed-divider));
+}
+.editorial-page .archive-post {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.75rem;
+  padding: 0.5rem 0.5rem;
+  border-radius: 8px;
+}
+.editorial-page .archive-post:hover { background: rgb(var(--ed-accent) / 0.04); }
+.editorial-page .archive-post-date {
+  flex: none;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  font-size: 0.75rem;
+  color: rgb(var(--ed-ink-faint));
+}
+.editorial-page .archive-post-title { flex: 1 1 16rem; min-width: 0; color: rgb(var(--ed-ink)); font-weight: 500; }
+.editorial-page .archive-post-title:hover { color: rgb(var(--ed-accent)); text-decoration: underline; text-underline-offset: 2px; }
+.editorial-page .archive-post-tag {
+  flex: none;
+  padding: 0.0625rem 0.5rem;
+  border-radius: 999px;
+  background: rgb(var(--ed-accent) / 0.08);
+  color: rgb(var(--ed-accent));
+  font-size: 0.6875rem;
+  font-weight: 600;
+}
+@media (max-width: 639px) {
+  .editorial-page .archive-months { margin-left: 1.25rem; margin-right: 0.5rem; padding-left: 0.625rem; }
+  .editorial-page .archive-posts { margin-left: 0.75rem; padding-left: 0.625rem; }
+}
+/* Mobile menu icon for the new nav row. */
+@media (max-width: 767px) {
+  .editorial-page .ed-nav-links.mobile-open .ed-nav-link[href="/archive.html"]::before { content: 'folder'; }
+}
+.editorial-page .archive-summary.hidden { display: none; }
+/* Footer is just the copyright line now (brand removed at the user's request): centred. */
+.editorial-page .site-footer { justify-content: center; text-align: center; }
+
+/* ---- Lưu trữ: tabs + Tài nguyên ---- */
+.editorial-page .archive-tabs {
+  display: inline-flex;
+  gap: 3px;
+  padding: 3px;
+  margin-bottom: 1.25rem;
+  border-radius: 999px;
+  border: 1px solid rgb(var(--ed-divider));
+  background: rgb(var(--ed-surface-low));
+}
+.editorial-page .archive-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  height: 2.25rem;
+  padding: 0 1rem 0 0.75rem;
+  border-radius: 999px;
+  color: rgb(var(--ed-ink-soft));
+  font-family: var(--font-vi-sans);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+.editorial-page .archive-tab .material-symbols-outlined { font-size: 18px; }
+.editorial-page .archive-tab:hover { color: rgb(var(--ed-accent)); }
+.editorial-page .archive-tab[aria-selected="true"] {
+  background: rgb(var(--ed-accent));
+  color: rgb(var(--ed-on-accent));
+  box-shadow: 0 2px 8px rgb(var(--ed-accent) / 0.25);
+}
+.editorial-page .archive-panel[hidden] { display: none; }
+.editorial-page .archive-tools { display: flex; }
+.editorial-page .archive-tools.hidden { display: none; }
+
+.editorial-page .res-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+.editorial-page .res-bar .hidden { display: none; }
+.editorial-page .res-note {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  margin: 0;
+  font-size: 0.875rem;
+  color: rgb(var(--ed-ink-soft));
+}
+.editorial-page .res-note:empty { display: none; }
+.editorial-page .res-note .material-symbols-outlined { font-size: 18px; color: rgb(var(--ed-accent)); }
+.editorial-page .res-login { color: rgb(var(--ed-accent)); font-weight: 600; text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
+.editorial-page .res-children {
+  margin: 0.125rem 0 0.25rem 1.375rem;
+  padding-left: 0.75rem;
+  border-left: 2px solid rgb(var(--ed-divider));
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+.editorial-page .res-empty { margin: 0.375rem 0.625rem; color: rgb(var(--ed-ink-faint)); font-size: 0.8125rem; font-style: italic; }
+.editorial-page .res-actions { display: inline-flex; gap: 0.125rem; margin-left: auto; }
+.editorial-page .res-folder > summary .archive-label { flex: 0 1 auto; }
+.editorial-page .res-folder > summary .res-actions + .archive-count { margin-left: 0; }
+.editorial-page .res-folder > summary .archive-count { margin-left: auto; }
+.editorial-page .res-act {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.875rem;
+  height: 1.875rem;
+  border-radius: 8px;
+  color: rgb(var(--ed-ink-faint));
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+.editorial-page .res-act .material-symbols-outlined { font-size: 17px; }
+.editorial-page .res-act:hover { background: rgb(var(--ed-accent) / 0.1); color: rgb(var(--ed-accent)); }
+.editorial-page .res-act--danger:hover { background: rgb(220 38 38 / 0.1); color: #dc2626; }
+.editorial-page .res-file {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.25rem 0.75rem;
+  padding: 0.5rem 0.625rem;
+  border-radius: 10px;
+}
+.editorial-page .res-file:hover { background: rgb(var(--ed-accent) / 0.04); }
+.editorial-page .res-file-icon {
+  flex: none;
+  font-size: 18px;
+  width: 1.75rem;
+  height: 1.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: rgb(var(--ed-surface-low));
+  color: rgb(var(--ed-ink-soft));
+}
+.editorial-page .res-file-name { flex: 1 1 12rem; min-width: 0; font-weight: 500; color: rgb(var(--ed-ink)); overflow-wrap: anywhere; }
+.editorial-page .res-file-meta { flex: none; font-size: 0.75rem; color: rgb(var(--ed-ink-faint)); }
+.editorial-page .res-file-actions { flex: none; display: inline-flex; align-items: center; gap: 0.25rem; }
+.editorial-page .res-download {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  height: 1.875rem;
+  padding: 0 0.75rem 0 0.5rem;
+  border-radius: 999px;
+  background: rgb(var(--ed-accent));
+  color: rgb(var(--ed-on-accent));
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.editorial-page .res-download .material-symbols-outlined { font-size: 16px; }
+.editorial-page .res-download:hover { filter: brightness(1.07); }
+.editorial-page .res-uploads {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 60;
+  width: min(22rem, calc(100vw - 2rem));
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  padding: 0.625rem;
+  border-radius: 14px;
+  border: 1px solid rgb(var(--ed-divider));
+  background: rgb(var(--ed-surface-lowest));
+  box-shadow: 0 16px 40px rgb(15 30 58 / 0.18);
+}
+.editorial-page .res-uploads.hidden { display: none; }
+.editorial-page .res-upload {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.25rem 0.5rem;
+  font-size: 0.8125rem;
+}
+.editorial-page .res-upload-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: rgb(var(--ed-ink)); }
+.editorial-page .res-upload-pct { color: rgb(var(--ed-ink-faint)); font-weight: 600; }
+.editorial-page .res-upload-bar { grid-column: 1 / -1; height: 6px; border-radius: 999px; background: rgb(var(--ed-surface-low)); overflow: hidden; }
+.editorial-page .res-upload-bar > span { display: block; height: 100%; width: 0; background: rgb(var(--ed-accent)); transition: width 0.2s ease; }
+.editorial-page .res-upload.is-done .res-upload-pct { color: #16a34a; }
+.editorial-page .res-upload.is-error .res-upload-pct { color: #dc2626; }
+.editorial-page .res-upload.is-error .res-upload-bar > span { background: #dc2626; }
+
+/* uiPrompt() input */
+.ui-dialog .ui-dialog-input {
+  width: 100%;
+  height: 2.75rem;
+  margin: 0.25rem 0 1rem;
+  padding: 0 0.875rem;
+  border-radius: 12px;
+  border: 1px solid rgb(var(--ed-divider));
+  background: rgb(var(--ed-surface-low));
+  color: rgb(var(--ed-ink));
+  font-size: 1rem;
+  outline: none;
+}
+.ui-dialog .ui-dialog-input:focus { border-color: rgb(var(--ed-accent) / 0.6); background: rgb(var(--ed-surface-lowest)); box-shadow: 0 0 0 3px rgb(var(--ed-accent) / 0.14); }
+.ui-dialog .ui-dialog-input[hidden] { display: none; }
+@media (max-width: 639px) {
+  .editorial-page .res-file-meta { order: 3; width: 100%; padding-left: 2.5rem; }
+  .editorial-page .res-download-label { display: none; }
+}
+
+/* Tài nguyên, signed out: a single card asking to sign in. */
+.editorial-page .res-locked {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 2.5rem 1.5rem;
+  border: 1px dashed rgb(var(--ed-accent) / 0.35);
+  border-radius: 18px;
+  background: rgb(var(--ed-surface-lowest));
+  text-align: center;
+}
+.editorial-page .res-locked-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  margin-bottom: 0.25rem;
+  border-radius: 16px;
+  background: rgb(var(--ed-accent) / 0.1);
+  color: rgb(var(--ed-accent));
+  font-size: 26px;
+}
+.editorial-page .res-locked-title { margin: 0; font-size: 1.0625rem; font-weight: 800; color: rgb(var(--ed-ink)); }
+.editorial-page .res-locked-text { margin: 0 0 0.5rem; max-width: 26rem; font-size: 0.875rem; color: rgb(var(--ed-ink-soft)); }
+.editorial-page .res-locked-btn {
+  height: 2.75rem;
+  padding: 0 1.75rem;
+  border-radius: 999px;
+  background: rgb(var(--ed-accent));
+  color: rgb(var(--ed-on-accent));
+  font-weight: 700;
+  font-size: 0.9375rem;
+  box-shadow: 0 6px 18px rgb(var(--ed-accent) / 0.28);
+  cursor: pointer;
+}
+.editorial-page .res-locked-btn:hover { filter: brightness(1.07); }
+
+/* ---------- Write: "Thẻ" combobox (write.js initTagCombo) ---------- */
+.editorial-page .tag-combo { position: relative; }
+.editorial-page .tag-combo > .ed-input { padding-right: 2.5rem; }
+.editorial-page .tag-combo-toggle {
+  position: absolute; top: 0; right: 0; bottom: 0; width: 2.5rem;
+  display: grid; place-items: center;
+  background: none; border: 0; cursor: pointer;
+  color: rgb(var(--ed-ink-faint));
+}
+.editorial-page .tag-combo-toggle .material-symbols-outlined { font-size: 1.25rem; transition: transform 0.15s ease; }
+.editorial-page .tag-combo:has(input[aria-expanded="true"]) .tag-combo-toggle .material-symbols-outlined { transform: rotate(180deg); }
+.editorial-page .tag-combo-list {
+  position: absolute; z-index: 30; left: 0; right: 0; top: calc(100% + 0.375rem);
+  max-height: 16rem; overflow-y: auto;
+  margin: 0; padding: 0.375rem; list-style: none;
+  background: rgb(var(--ed-surface-lowest));
+  border: 1px solid rgb(var(--ed-divider));
+  border-radius: 0.875rem;
+  box-shadow: 0 12px 32px rgb(15 30 58 / 0.12);
+}
+.editorial-page .tag-combo-list.hidden { display: none; }
+.editorial-page .tag-combo-option {
+  display: flex; align-items: center; gap: 0.5rem;
+  padding: 0.5rem 0.75rem; border-radius: 0.625rem;
+  font-size: 0.875rem; font-weight: 500; color: rgb(var(--ed-ink));
+  cursor: pointer;
+}
+.editorial-page .tag-combo-option > span:first-child { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.editorial-page .tag-combo-option:hover,
+.editorial-page .tag-combo-option[aria-selected="true"] { background: rgb(var(--ed-accent) / 0.08); color: rgb(var(--ed-accent)); }
+.editorial-page .tag-combo-count {
+  flex: none; min-width: 1.5rem; padding: 0 0.375rem; border-radius: 999px;
+  background: rgb(var(--ed-accent) / 0.1); color: rgb(var(--ed-accent));
+  font-size: 0.75rem; font-weight: 700; text-align: center; line-height: 1.5rem;
+}
+.editorial-page .tag-combo-new { color: rgb(var(--ed-accent)); font-weight: 600; }
+.editorial-page .tag-combo-new > span:first-child { flex: none; font-size: 1.125rem; line-height: 1; }
+.editorial-page .tag-combo-new > span:last-child { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.editorial-page .tag-combo-empty { padding: 0.5rem 0.75rem; font-size: 0.8125rem; color: rgb(var(--ed-ink-faint)); }
+
+/* ---------- Table properties (write.js "Table properties bar") ----------
+   Classes set from the floating bar over a table in the editor. Written for
+   the editor/preview (.rt-editor, .rich-text-block) and again for the
+   published article, whose Sky table rules above sit at #post-content
+   specificity and would otherwise win. */
+:is(.rich-text-block, .rt-editor) table.rt-tbl-fit { width: auto; max-width: 100%; }
+:is(.rich-text-block, .rt-editor) table.rt-tbl-compact :is(td, th) { padding: 0.25rem 0.5rem; }
+:is(.rich-text-block, .rt-editor) table.rt-tbl-striped tbody tr:nth-child(even) > :is(td, th) { background: rgb(var(--ed-accent) / 0.05); }
+:is(.rich-text-block, .rt-editor) table.rt-tbl-headcol tr > :first-child { background: rgb(var(--c-surface-container) / 0.6); font-weight: 600; }
+:is(.rich-text-block, .rt-editor) :is(td, th).rt-talign-center { text-align: center; }
+:is(.rich-text-block, .rt-editor) :is(td, th).rt-talign-right { text-align: right; }
+
+.editorial-page #post-content .prose-content table.rt-tbl-fit { width: auto; max-width: 100%; }
+.editorial-page #post-content .prose-content table.rt-tbl-compact :is(td, th) { padding: 0.3125rem 0.5rem; }
+.editorial-page #post-content .prose-content table.rt-tbl-striped tbody tr:nth-child(even) > td { background: rgb(var(--ed-accent) / 0.05); }
+.editorial-page #post-content .prose-content table.rt-tbl-headcol tr > :first-child { background: rgb(var(--ed-surface)); color: rgb(var(--ed-ink)); font-weight: 600; }
+.editorial-page #post-content .prose-content :is(td, th).rt-talign-center { text-align: center; }
+.editorial-page #post-content .prose-content :is(td, th).rt-talign-right { text-align: right; }
+.editorial-page #post-content .prose-content :is(td, th).rt-valign-middle { vertical-align: middle; }
+.editorial-page #post-content .prose-content :is(td, th).rt-valign-bottom { vertical-align: bottom; }
+/* Border choices (existing "Viền" ops) - on the published page the Sky grid
+   lines used to override them. */
+.editorial-page #post-content .prose-content table.rt-tbl-border-outer :is(td, th) { border: 0 !important; }
+.editorial-page #post-content .prose-content table.rt-tbl-border-none { border: 0; border-radius: 0; }
+.editorial-page #post-content .prose-content table.rt-tbl-border-none :is(td, th) { border: 0 !important; }
+
+/* The floating bar itself. */
+.rt-tblbar {
+  position: fixed;
+  z-index: 45;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.375rem 0.5rem;
+  max-width: min(62rem, calc(100vw - 16px));
+  padding: 0.375rem 0.5rem;
+  background: rgb(var(--ed-surface-lowest, 255 255 255));
+  border: 1px solid rgb(var(--ed-divider, 226 232 240));
+  border-radius: 0.875rem;
+  box-shadow: 0 10px 28px rgb(15 30 58 / 0.14);
+  font-family: var(--font-vi-sans);
+}
+.rt-tblbar[hidden], .rt-tblbar.is-offscreen { display: none; }
+.rt-tblbar-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.125rem;
+  padding-right: 0.5rem;
+  border-right: 1px solid rgb(var(--ed-divider, 226 232 240));
+}
+.rt-tblbar-group:last-child { border-right: 0; padding-right: 0; }
+.rt-tblbar-label {
+  margin-right: 0.25rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgb(var(--ed-ink-faint, 100 116 139));
+}
+.rt-tblbar-btn {
+  padding: 0.25rem 0.5rem;
+  border: 0;
+  border-radius: 0.5rem;
+  background: none;
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.2;
+  color: rgb(var(--ed-ink, 15 30 58));
+  cursor: pointer;
+  white-space: nowrap;
+}
+.rt-tblbar-btn:hover { background: rgb(var(--ed-accent, 37 99 235) / 0.08); color: rgb(var(--ed-accent, 37 99 235)); }
+.rt-tblbar-btn[aria-pressed="true"] { background: rgb(var(--ed-accent, 37 99 235) / 0.12); color: rgb(var(--ed-accent, 37 99 235)); }
+.rt-tblbar-btn.is-danger:hover { background: rgb(220 38 38 / 0.08); color: rgb(220 38 38); }
+
+/* ---------- Write: own scrollbars for the editor and the settings column ----------
+   From 1024px the editor column and the "Đăng bài / Thông tin thêm" column
+   each fit the screen and scroll on their own, so the long settings column is
+   reachable without scrolling the whole article past it. */
+@media (min-width: 1024px) {
+  .editorial-page #post-form > .rt-editor-col,
+  .editorial-page #post-form > .rt-side-col,
+  .editorial-page #post-form.is-previewing > .rt-preview-col {
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--ed-accent) / 0.35) transparent;
+    scrollbar-gutter: stable;
+  }
+  /* Room for the cards' shadows and the scrollbar beside them. */
+  .editorial-page #post-form > .rt-editor-col { position: sticky; top: 10.5rem; max-height: calc(100dvh - 18.75rem); min-height: 22rem; padding: 2px 6px 4px 2px; }
+  .editorial-page #post-form > .rt-side-col { max-height: calc(100dvh - 13.25rem); padding: 2px 6px 4px 2px; }
+  /* 1024-1279px with Xem trước on: the preview sits UNDER the editor in the
+     same column, so neither may stick (one would slide over the other). */
+  .editorial-page #post-form.is-previewing > .rt-preview-col { max-height: calc(100dvh - 18.75rem); padding: 2px 6px 4px 2px; }
+  .editorial-page #post-form > :is(.rt-editor-col, .rt-side-col, .rt-preview-col)::-webkit-scrollbar { width: 8px; }
+  .editorial-page #post-form > :is(.rt-editor-col, .rt-side-col, .rt-preview-col)::-webkit-scrollbar-thumb { background: rgb(var(--ed-accent) / 0.3); border-radius: 999px; }
+  .editorial-page #post-form > :is(.rt-editor-col, .rt-side-col, .rt-preview-col)::-webkit-scrollbar-thumb:hover { background: rgb(var(--ed-accent) / 0.5); }
+  .editorial-page #post-form > :is(.rt-editor-col, .rt-side-col, .rt-preview-col)::-webkit-scrollbar-track { background: transparent; }
+}
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .editorial-page #post-form.is-previewing > .rt-editor-col,
+  .editorial-page #post-form.is-previewing > .rt-preview-col { position: static; }
+}
+@media (min-width: 1280px) {
+  .editorial-page #post-form.is-previewing > .rt-preview-col { top: 10.5rem; }
+}
+
+/* ---------- Tag names in capitals everywhere (user, 2026-10-04) ----------
+   Display only: the stored tag keeps its spelling, and the chips/filters
+   already fold case, so "Network" and "NETWORK" are one tag. */
+.editorial-page :is(.ed-chip, .viewall-chip, .related-tag, #post-tag),
+.editorial-page .tag-combo-option > span:first-child,
+.editorial-page #post-tag-input { text-transform: uppercase; }
+.editorial-page #post-tag-input::placeholder { text-transform: none; }
+.editorial-page .tag-combo-new > span:last-child { text-transform: none; }
+
+/* Tag combobox: admin rename / delete buttons on each existing tag. */
+.editorial-page .tag-combo-act {
+  flex: none;
+  padding: 0.125rem 0.4rem;
+  border: 0;
+  border-radius: 0.375rem;
+  background: none;
+  font: inherit;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: rgb(var(--ed-ink-faint));
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+.editorial-page .tag-combo-option:hover .tag-combo-act,
+.editorial-page .tag-combo-option[aria-selected="true"] .tag-combo-act { opacity: 1; }
+.editorial-page .tag-combo-act:hover { background: rgb(var(--ed-accent) / 0.12); color: rgb(var(--ed-accent)); }
+.editorial-page .tag-combo-act.is-danger:hover { background: rgb(220 38 38 / 0.1); color: rgb(220 38 38); }
+@media (hover: none) { .editorial-page .tag-combo-act { opacity: 1; } }
+
+/* ---------- Back-to-top on phones (user, 2026-10-05) ----------
+   A 44px round icon button instead of the labelled pill, frosted, clear of
+   the iPhone home bar; shown whenever past the first screen (post.js).
+   Desktop keeps the labelled pill aligned with the reading column. */
+@keyframes to-top-in {
+  from { opacity: 0; transform: translateY(8px) scale(0.92); }
+  to { opacity: 1; transform: none; }
+}
+@media (max-width: 767px) {
+  .editorial-page .to-top-btn.to-top-btn--floating {
+    /* px, not rem: the root size shrinks on phones and 2.75rem came out 40px. */
+    width: 44px;
+    height: 44px;
+    box-sizing: border-box;
+    min-width: 0;
+    padding: 0;
+    justify-content: center;
+    gap: 0;
+    border-radius: 999px;
+    right: max(1rem, env(safe-area-inset-right)) !important;
+    bottom: calc(1rem + env(safe-area-inset-bottom));
+    background: rgb(var(--ed-surface-lowest) / 0.82);
+    -webkit-backdrop-filter: saturate(180%) blur(12px);
+    backdrop-filter: saturate(180%) blur(12px);
+    border: 1px solid rgb(var(--ed-divider));
+    box-shadow: 0 6px 18px rgb(15 30 58 / 0.14);
+    color: rgb(var(--ed-ink));
+    animation: to-top-in 0.18s ease-out;
+  }
+  .editorial-page .to-top-btn.to-top-btn--floating .to-top-label { display: none; }
+  /* Reading progress as a ring around the button (post.js sets --read 0-100);
+     the bar under the header is hidden on phones. */
+  .editorial-page .reading-progress-container { display: none; }
+  .editorial-page .to-top-btn.to-top-btn--floating { border-color: transparent; }
+  .editorial-page .to-top-btn.to-top-btn--floating::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: 999px;
+    background: conic-gradient(rgb(var(--ed-accent)) calc(var(--read, 0) * 1%), rgb(var(--ed-divider)) 0);
+    -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 3px));
+    mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 3px));
+    pointer-events: none;
+  }
+  .editorial-page .to-top-btn.to-top-btn--floating .material-symbols-outlined { font-size: 22px !important; }
+  html.dark .editorial-page .to-top-btn.to-top-btn--floating { box-shadow: 0 6px 18px rgb(0 0 0 / 0.45); }
+}
+@media (max-width: 767px) and (prefers-reduced-motion: reduce) {
+  .editorial-page .to-top-btn.to-top-btn--floating { animation: none; }
+}
+
+/* ---------- Admin > Gửi thông báo (js/admin.js, server/broadcast.js) ---------- */
+.editorial-page .bc-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.75rem; }
+@media (min-width: 1024px) { .editorial-page .bc-layout { grid-template-columns: minmax(0, 1fr) 19rem; align-items: start; } }
+.editorial-page .bc-body { min-height: 16rem; resize: vertical; font-family: var(--font-vi-sans); line-height: 1.6; }
+.editorial-page .bc-body-head { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; }
+.editorial-page .bc-seg { display: inline-flex; padding: 3px; border-radius: 999px; background: rgb(var(--ed-surface)); }
+.editorial-page .bc-seg-btn { padding: 0.25rem 0.875rem; border: 0; border-radius: 999px; background: none; font: inherit; font-size: 0.8125rem; font-weight: 600; color: rgb(var(--ed-ink-soft)); cursor: pointer; }
+.editorial-page .bc-seg-btn.is-active { background: rgb(var(--ed-surface-lowest)); color: rgb(var(--ed-accent)); box-shadow: 0 1px 3px rgb(15 30 58 / 0.12); }
+.editorial-page .bc-preview { min-height: 16rem; padding: 1.25rem 1.5rem; border: 1px solid rgb(var(--ed-divider)); border-radius: 0.75rem; background: rgb(var(--ed-surface-lowest)); color: rgb(var(--ed-ink)); font-size: 0.9375rem; line-height: 1.6; overflow-wrap: anywhere; }
+.editorial-page .bc-preview.hidden { display: none; }
+.editorial-page .bc-preview-subject { margin: -0.25rem 0 1rem; padding-bottom: 0.75rem; border-bottom: 1px solid rgb(var(--ed-divider)); font-weight: 700; font-size: 1rem; }
+.editorial-page .bc-preview a { color: rgb(var(--ed-accent)) !important; }
+.editorial-page .bc-help { margin: 0; font-size: 0.75rem; color: rgb(var(--ed-ink-faint)); line-height: 1.8; }
+.editorial-page .bc-help code { padding: 0.0625rem 0.375rem; border-radius: 0.375rem; background: rgb(var(--ed-surface)); font-size: 0.6875rem; }
+.editorial-page .bc-recipients { padding: 1.25rem; border: 1px solid rgb(var(--ed-divider)); border-radius: 1rem; background: rgb(var(--ed-surface) / 0.4); }
+.editorial-page .bc-radio { display: flex; align-items: center; gap: 0.625rem; font-size: 0.875rem; color: rgb(var(--ed-ink)); cursor: pointer; }
+.editorial-page .bc-radio input { accent-color: rgb(var(--ed-accent)); width: 1rem; height: 1rem; }
+.editorial-page .bc-radio b { margin-left: 0.25rem; padding: 0 0.5rem; border-radius: 999px; background: rgb(var(--ed-accent) / 0.1); color: rgb(var(--ed-accent)); font-size: 0.75rem; }
+.editorial-page .bc-picker { display: flex; flex-direction: column; gap: 0.5rem; }
+.editorial-page .bc-picker.hidden { display: none; }
+.editorial-page .bc-picker-actions { display: flex; gap: 1rem; }
+.editorial-page .bc-link { padding: 0; border: 0; background: none; font: inherit; font-size: 0.8125rem; font-weight: 600; color: rgb(var(--ed-accent)); cursor: pointer; }
+.editorial-page .bc-user-list { max-height: 16rem; overflow-y: auto; margin: 0; padding: 0.25rem; list-style: none; border: 1px solid rgb(var(--ed-divider)); border-radius: 0.75rem; background: rgb(var(--ed-surface-lowest)); }
+.editorial-page .bc-user { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 0.625rem; padding: 0.375rem 0.5rem; border-radius: 0.5rem; cursor: pointer; }
+.editorial-page .bc-user:hover { background: rgb(var(--ed-accent) / 0.06); }
+.editorial-page .bc-user input { grid-row: span 2; align-self: center; accent-color: rgb(var(--ed-accent)); }
+.editorial-page .bc-user-name { font-size: 0.875rem; font-weight: 600; color: rgb(var(--ed-ink)); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.editorial-page .bc-user-email { font-size: 0.75rem; color: rgb(var(--ed-ink-faint)); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.editorial-page .bc-empty { padding: 0.5rem; font-size: 0.8125rem; color: rgb(var(--ed-ink-faint)); text-align: center; }
+.editorial-page .bc-actions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem; }
+.editorial-page .bc-btn-primary { flex: 1 1 auto; display: inline-flex; align-items: center; justify-content: center; gap: 0.375rem; padding: 0.625rem 1rem; border: 0; border-radius: 999px; background: rgb(var(--ed-accent)); color: #fff; font: inherit; font-weight: 700; font-size: 0.875rem; cursor: pointer; }
+.editorial-page .bc-btn-primary .material-symbols-outlined { font-size: 18px; }
+.editorial-page .bc-btn-secondary { flex: 1 1 auto; padding: 0.625rem 1rem; border: 1px solid rgb(var(--ed-divider)); border-radius: 999px; background: rgb(var(--ed-surface-lowest)); color: rgb(var(--ed-ink)); font: inherit; font-weight: 600; font-size: 0.875rem; cursor: pointer; }
+.editorial-page :is(.bc-btn-primary, .bc-btn-secondary):disabled { opacity: 0.6; cursor: progress; }
+.editorial-page .bc-status { margin: 0; min-height: 1.25rem; font-size: 0.8125rem; color: rgb(var(--ed-ink-soft)); }
+.editorial-page .bc-status.is-ok { color: rgb(22 163 74); }
+.editorial-page .bc-status.is-error { color: rgb(220 38 38); }
+.editorial-page .bc-status.is-info { color: rgb(var(--ed-accent)); }
+.editorial-page .bc-warning { border-color: rgb(217 119 6 / 0.4); background: rgb(217 119 6 / 0.08); color: rgb(146 64 14); }
+.editorial-page .bc-warning.hidden { display: none; }
+.editorial-page .bc-history { border-collapse: collapse; font-size: 0.875rem; }
+.editorial-page .bc-history th { text-align: left; padding: 0.5rem 0.75rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.04em; color: rgb(var(--ed-ink-faint)); border-bottom: 1px solid rgb(var(--ed-divider)); }
+.editorial-page .bc-history td { padding: 0.625rem 0.75rem; border-bottom: 1px solid rgb(var(--ed-divider) / 0.6); color: rgb(var(--ed-ink)); vertical-align: top; }
+.editorial-page .bc-nowrap { white-space: nowrap; }
+.editorial-page .bc-pill { display: inline-block; padding: 0.0625rem 0.5rem; border-radius: 999px; font-size: 0.75rem; font-weight: 600; white-space: nowrap; }
+.editorial-page .bc-pill.is-ok { background: rgb(22 163 74 / 0.12); color: rgb(21 128 61); }
+.editorial-page .bc-pill.is-fail { background: rgb(220 38 38 / 0.12); color: rgb(185 28 28); }
+.editorial-page .bc-pill.is-sending { background: rgb(var(--ed-accent) / 0.12); color: rgb(var(--ed-accent)); }
+
+/* ---------- Markdown-made marks (write.js "Markdown in the editor") ----------
+   Inline `code` and the --- divider, in the editor, the live preview and the
+   published article, both themes (the published light rule near the top of
+   this file still wins there). */
+:is(.rt-editor, .rich-text-block) :not(pre) > code {
+  padding: 0.1em 0.38em;
+  border-radius: 5px;
+  background: rgb(var(--ed-surface, 232 240 251));
+  color: rgb(var(--ed-ink, 15 30 58));
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.875em;
+  overflow-wrap: anywhere;
+}
+:is(.rt-editor, .rich-text-block) hr {
+  height: 0;
+  margin: 1.75rem 0;
+  border: 0;
+  border-top: 1px solid rgb(var(--ed-divider, 226 232 240));
+}
+
+/* ---------- Profile social links (profile.js renderSocialLinks) ---------- */
+.editorial-page .profile-socials { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.75rem 0 0.25rem; }
+.editorial-page .profile-socials.hidden { display: none; }
+.editorial-page .profile-social {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  padding: 0.3rem 0.75rem 0.3rem 0.55rem;
+  border: 1px solid rgb(var(--ed-divider)); border-radius: 999px;
+  background: rgb(var(--ed-surface-lowest));
+  color: rgb(var(--ed-ink-soft)); font-size: 0.8125rem; font-weight: 600; text-decoration: none;
+  transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
+}
+.editorial-page .profile-social svg { width: 1rem; height: 1rem; flex: none; }
+.editorial-page .profile-social:hover { border-color: rgb(var(--ed-accent) / 0.45); color: rgb(var(--ed-accent)); background: rgb(var(--ed-accent) / 0.06); }
+.editorial-page .profile-social--facebook svg { color: #1877f2; }
+.editorial-page .profile-social--linkedin svg { color: #0a66c2; }
+.editorial-page .profile-social--youtube svg { color: #ff0000; }
+.editorial-page .profile-social--website svg { color: rgb(var(--ed-accent)); }
+.editorial-page .profile-social-fields { margin: 0.5rem 0 0; padding: 1rem 1.125rem 1.125rem; border: 1px solid rgb(var(--ed-divider)); border-radius: 0.875rem; }
+.editorial-page .profile-social-fields legend { padding: 0 0.375rem; }
+.editorial-page .profile-social-note { margin: 0 0 0.25rem; font-size: 0.8125rem; color: rgb(var(--ed-ink-faint)); }
+.editorial-page .profile-social-field { display: grid; grid-template-columns: 6.5rem minmax(0, 1fr); align-items: center; gap: 0.75rem; }
+.editorial-page .profile-social-name { font-size: 0.8125rem; font-weight: 600; color: rgb(var(--ed-ink-soft)); }
+@media (max-width: 479px) { .editorial-page .profile-social-field { grid-template-columns: minmax(0, 1fr); gap: 0.25rem; } }
+
+/* ---------- Account menu: never taller than the screen (mobile admin menu
+   has ~15 items) - it scrolls inside itself. ---------- */
+.editorial-page #user-dropdown-menu {
+  max-height: calc(100dvh - 5.5rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+
+/* ---------- Admin notification popup (api.js toggleNavNotifPanel) ---------- */
+.nn-panel {
+  position: fixed;
+  z-index: 70;
+  right: 1rem;
+  width: min(25rem, calc(100vw - 1rem));
+  max-height: calc(100dvh - 5.5rem);
+  display: flex;
+  flex-direction: column;
+  background: rgb(var(--ed-surface-lowest, 255 255 255));
+  border: 1px solid rgb(var(--ed-divider, 226 232 240));
+  border-radius: 16px;
+  box-shadow: 0 18px 44px rgb(15 30 58 / 0.18);
+  font-family: var(--font-vi-sans);
+  overflow: hidden;
+  animation: nn-in 0.14s ease-out;
+}
+.nn-panel[hidden] { display: none; }
+@keyframes nn-in { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+@media (max-width: 639px) { .nn-panel { left: 0.5rem; right: 0.5rem; width: auto; } }
+html.dark .nn-panel { box-shadow: 0 18px 44px rgb(0 0 0 / 0.5); }
+.nn-head { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; padding: 0.875rem 1rem 0.375rem; }
+.nn-title { margin: 0; font-size: 1.25rem; font-weight: 800; color: rgb(var(--ed-ink, 15 30 58)); }
+.nn-all { display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.25rem 0.5rem; border: 0; border-radius: 0.5rem; background: none; font: inherit; font-size: 0.8125rem; font-weight: 600; color: rgb(var(--ed-accent, 37 99 235)); cursor: pointer; }
+.nn-all .material-symbols-outlined { font-size: 18px; }
+.nn-all:hover:not(:disabled) { background: rgb(var(--ed-accent, 37 99 235) / 0.08); }
+.nn-all:disabled { color: rgb(var(--ed-ink-faint, 100 116 139)); cursor: default; opacity: 0.7; }
+.nn-tabs { display: flex; gap: 0.375rem; padding: 0.25rem 1rem 0.5rem; }
+.nn-tab { padding: 0.375rem 0.875rem; border: 0; border-radius: 999px; background: none; font: inherit; font-size: 0.875rem; font-weight: 600; color: rgb(var(--ed-ink-soft, 59 74 102)); cursor: pointer; }
+.nn-tab:hover { background: rgb(var(--ed-surface, 232 240 251)); }
+.nn-tab.is-active { background: rgb(var(--ed-accent, 37 99 235) / 0.12); color: rgb(var(--ed-accent, 37 99 235)); }
+.nn-list { flex: 1 1 auto; margin: 0; padding: 0 0.375rem 0.375rem; list-style: none; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; }
+.nn-item { position: relative; border-radius: 12px; }
+.nn-item + .nn-item { margin-top: 2px; }
+.nn-item.is-unread { background: rgb(var(--ed-accent, 37 99 235) / 0.06); }
+.nn-link { display: flex; gap: 0.75rem; padding: 0.625rem 2.25rem 0.625rem 0.625rem; border-radius: 12px; color: inherit; text-decoration: none; }
+.nn-link:hover { background: rgb(var(--ed-surface, 232 240 251) / 0.8); }
+.nn-icon { flex: none; width: 2.5rem; height: 2.5rem; border-radius: 999px; display: grid; place-items: center; background: rgb(var(--ed-surface, 232 240 251)); color: rgb(var(--ed-accent, 37 99 235)); }
+.nn-icon .material-symbols-outlined { font-size: 20px; }
+.nn-tone-reported { background: rgb(220 38 38 / 0.12); color: rgb(220 38 38); }
+.nn-tone-comment { background: rgb(37 99 235 / 0.12); color: rgb(37 99 235); }
+.nn-tone-user { background: rgb(22 163 74 / 0.12); color: rgb(22 163 74); }
+.nn-tone-hidden { background: rgb(217 119 6 / 0.14); color: rgb(217 119 6); }
+.nn-body { min-width: 0; display: flex; flex-direction: column; gap: 0.125rem; }
+.nn-text { font-size: 0.875rem; line-height: 1.4; color: rgb(var(--ed-ink, 15 30 58)); }
+.nn-text b { font-weight: 700; }
+.nn-detail { font-size: 0.8125rem; color: rgb(var(--ed-ink-soft, 59 74 102)); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.nn-reason { color: rgb(220 38 38); }
+.nn-time { font-size: 0.75rem; font-weight: 600; color: rgb(var(--ed-ink-faint, 100 116 139)); }
+.nn-item.is-unread .nn-time { color: rgb(var(--ed-accent, 37 99 235)); }
+.nn-dot { position: absolute; top: 50%; right: 0.625rem; width: 1.25rem; height: 1.25rem; margin-top: -0.625rem; padding: 0; border: 0; border-radius: 999px; background: none; cursor: pointer; }
+.nn-dot::after { content: ''; position: absolute; inset: 0.3125rem; border-radius: 999px; background: rgb(var(--ed-accent, 37 99 235)); }
+.nn-dot:hover { background: rgb(var(--ed-accent, 37 99 235) / 0.12); }
+.nn-empty { padding: 1.5rem 1rem; text-align: center; font-size: 0.875rem; color: rgb(var(--ed-ink-faint, 100 116 139)); }
+.nn-foot { display: block; padding: 0.75rem; border-top: 1px solid rgb(var(--ed-divider, 226 232 240)); text-align: center; font-size: 0.875rem; font-weight: 700; color: rgb(var(--ed-accent, 37 99 235)); text-decoration: none; }
+.nn-foot:hover { background: rgb(var(--ed-accent, 37 99 235) / 0.06); }
+
+/* A comment opened from a notification (#comment-123, post.js). */
+.editorial-page .comment-flash { animation: comment-flash 2.6s ease-out; border-radius: 12px; }
+@keyframes comment-flash { 0%, 40% { background: rgb(var(--ed-accent) / 0.14); box-shadow: 0 0 0 3px rgb(var(--ed-accent) / 0.25); } 100% { background: transparent; box-shadow: none; } }
+
+/* "Hoặc" between Đăng nhập / Đăng ký and the Google / GitHub items in the
+   signed-out account menu - the "Giao diện" label's style, aligned with it
+   (that label sits in a px-3 box plus its own 0.375rem). */
+.editorial-page #user-dropdown-menu .ed-dropdown-or { margin: 0.625rem 0 0.25rem 0.8125rem; }
+
+/* ---------- Admin > Thùng rác on phones ----------
+   A row is content + two buttons side by side; under 640px the buttons took
+   the width and squeezed the title to a word per line (all four folders share
+   trashRowHtml). Stack them: content on top, the buttons a full-width pair. */
+@media (max-width: 639px) {
+  .editorial-page .trash-row { flex-direction: column; align-items: stretch; gap: 0.75rem; }
+  .editorial-page .trash-row > :first-child { width: 100%; }
+  .editorial-page .trash-row > :last-child { width: 100%; }
+  .editorial-page .trash-row > :last-child > button { flex: 1 1 0; justify-content: center; padding-left: 0.75rem; padding-right: 0.75rem; }
+  .editorial-page .trash-row h4 { overflow-wrap: anywhere; }
+}
+/* The four folder chips: on a phone they scrolled sideways with no hint and
+   "Media" was off-screen - wrap them onto two lines instead. */
+@media (max-width: 639px) {
+  .editorial-page #trash-folder-chips { flex-wrap: wrap; overflow-x: visible; }
+}
+
+/* Signed-out menu: "Đăng nhập với Google" / "… GitHub" as two soft cards,
+   so the two providers read as separate choices. */
+.editorial-page #user-dropdown-menu .ed-dropdown-item--accent {
+  margin: 0 0.25rem 0.375rem;
+  border: 1px solid rgb(var(--ed-divider) / 0.9);
+  border-radius: 12px;
+  background: rgb(var(--ed-surface) / 0.45);
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+.editorial-page #user-dropdown-menu .ed-dropdown-item--accent:hover {
+  border-color: rgb(var(--ed-accent) / 0.35);
+  background: rgb(var(--ed-accent) / 0.07);
+}
+.editorial-page #user-dropdown-menu .ed-dropdown-item--accent:last-child { margin-bottom: 0.25rem; }
+
+/* Signed-out menu: the "Chưa đăng nhập" note is plain text (no tinted card);
+   "Đăng nhập / Đăng ký" - the main action - gets the block instead, a touch
+   stronger than the Google / GitHub cards below it. */
+.editorial-page #user-dropdown-menu .ed-dropdown-header--guest {
+  background: none !important;
+  box-shadow: none !important;
+  border: 0 !important;
+}
+.editorial-page #user-dropdown-menu .ed-dropdown-item--login {
+  margin: 0 0.25rem 0.375rem;
+  border: 1px solid rgb(var(--ed-accent) / 0.22);
+  border-radius: 12px;
+  background: rgb(var(--ed-accent) / 0.07);
+  font-weight: 600;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+.editorial-page #user-dropdown-menu .ed-dropdown-item--login:hover {
+  border-color: rgb(var(--ed-accent) / 0.4);
+  background: rgb(var(--ed-accent) / 0.12);
+}
+
+/* Signed-out account menu: only short labels ("Đăng nhập với GitHub", the
+   Sáng / Tối / Đọc sách picker), so it is narrower than the signed-in one. */
+.editorial-page #user-dropdown-menu.is-guest { width: 15rem; }
+/* The login / Google / GitHub cards line up with the "Giao diện" box below
+   them: 13px from the menu on both sides (the list is inset 7px, so 6px each
+   side here; width explicit because the items are width:100%). */
+.editorial-page #user-dropdown-menu :is(.ed-dropdown-item--login, .ed-dropdown-item--accent) {
+  width: calc(100% - 12px);
+  margin-left: 6px;
+  margin-right: 6px;
+}
+
+/* Desktop: the floating back-to-top pill fades out after 5 s without
+   scrolling (post.js adds .to-top-btn--idle) and fades back on scroll. */
+@media (min-width: 768px) {
+  .editorial-page .to-top-btn.to-top-btn--floating { transition: opacity 0.35s ease, transform 0.35s ease; }
+  .editorial-page .to-top-btn.to-top-btn--floating.to-top-btn--idle {
+    opacity: 0;
+    transform: translateY(8px);
+    pointer-events: none;
+  }
+}
+
+/* Admin > Thông báo: "Đánh dấu tất cả đã đọc" as the site's pill button
+   (same family as the Xem trước / Gửi thử pills): white pill, hairline
+   border, accent icon + text, soft accent tint on hover. */
+.editorial-page #notif-read-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  flex: none;
+  padding: 0.5rem 1rem 0.5rem 0.75rem;
+  border: 1px solid rgb(var(--ed-accent) / 0.28);
+  border-radius: 999px;
+  background: rgb(var(--ed-surface-lowest));
+  color: rgb(var(--ed-accent));
+  font-family: var(--font-vi-sans);
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.2;
+  text-transform: none;
+  letter-spacing: 0;
+  box-shadow: 0 1px 2px rgb(15 30 58 / 0.06);
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.editorial-page #notif-read-all .material-symbols-outlined { font-size: 18px !important; }
+.editorial-page #notif-read-all:hover:not(:disabled) {
+  border-color: rgb(var(--ed-accent) / 0.5);
+  background: rgb(var(--ed-accent) / 0.08);
+  box-shadow: 0 2px 8px rgb(var(--ed-accent) / 0.12);
+}
+.editorial-page #notif-read-all:focus-visible { outline: 2px solid rgb(var(--ed-accent) / 0.5); outline-offset: 2px; }
+.editorial-page #notif-read-all:disabled { opacity: 0.55; cursor: default; box-shadow: none; }
+
+/* Editor's labelled "Tải lên" button on each resource folder. */
+.editorial-page .res-act.res-act--labeled {
+  width: auto;
+  gap: 0.3rem;
+  padding: 0 0.75rem 0 0.55rem;
+  border: 1px solid rgb(var(--ed-accent) / 0.3);
+  border-radius: 999px;
+  background: rgb(var(--ed-accent) / 0.06);
+  color: rgb(var(--ed-accent));
+  font-family: var(--font-vi-sans);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.editorial-page .res-act.res-act--labeled:hover { background: rgb(var(--ed-accent) / 0.12); border-color: rgb(var(--ed-accent) / 0.5); }

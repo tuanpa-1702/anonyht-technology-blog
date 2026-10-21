@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# admin.html, write.html, profile.html and maintenance.html are kept out of
+# search results with an X-Robots-Tag: noindex header (server/server.js), not
+# with Disallow - a blocked page can't be read, so its noindex would be missed.
+
+Sitemap: https://anonyht.com/sitemap.xml
