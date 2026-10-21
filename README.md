@@ -1,4 +1,4 @@
-# TuanPA Blog
+# ANONYHT Blog
 
 🔗 **Demo trực tiếp: [anonyht.com](https://anonyht.com)** &nbsp;·&nbsp; 📄 Giấy phép: [MIT](LICENSE)
 
