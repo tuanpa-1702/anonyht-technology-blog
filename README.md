@@ -1,5 +1,7 @@
 # TuanPA Blog
 
+🔗 **Demo trực tiếp: [anonyht.com](https://anonyht.com)** &nbsp;·&nbsp; 📄 Giấy phép: [MIT](LICENSE)
+
 Web blog full-stack, dựng lại từ 4 màn hình thiết kế Google Stitch (`admin.html`,
 `dashboard.html`, `letter.html`, `user.html`) thành một ứng dụng thật, chạy được
 trên Ubuntu.
@@ -14,6 +16,46 @@ trên Ubuntu.
   subscriber bản tin, chỉnh sửa nội dung trang chủ, cấu hình email gửi đi)
 - **Email:** thông báo bài viết mới + OTP quên mật khẩu, cấu hình ngay trong
   bảng quản trị (Gmail / Office 365 / SMTP tuỳ chỉnh)
+
+## Cài đặt nhanh
+
+Yêu cầu: **Node.js >= 18** (khuyến nghị 20 LTS). Trên Ubuntu cần công cụ biên dịch cho `better-sqlite3`: `sudo apt install -y build-essential python3`.
+
+```bash
+# 1. Lấy mã nguồn + cài thư viện
+git clone https://github.com/<user>/<repo>.git
+cd <repo>
+npm install
+
+# 2. Tạo file cấu hình .env từ mẫu
+cp .env.example .env
+
+# 3. Sinh JWT_SECRET ngẫu nhiên rồi dán vào .env
+openssl rand -hex 32
+
+# 4. Mở .env điền các biến bắt buộc (xem bảng dưới), rồi chạy
+npm start          # hoặc: npm run dev  (tự restart khi sửa code)
+```
+
+Mở trình duyệt tại `http://localhost:3000`. **Lần chạy đầu** app tự tạo database `data/blog.db` và seed tài khoản admin từ `ADMIN_*`.
+
+### Các biến `.env` cần điền
+
+| Biến | Bắt buộc? | Ý nghĩa |
+|---|---|---|
+| `JWT_SECRET` | ✅ | Chuỗi ngẫu nhiên ≥ 32 ký tự (`openssl rand -hex 32`). Server **từ chối khởi động** nếu trống/ngắn/còn giá trị mẫu |
+| `ADMIN_EMAIL` | ✅ | Email admin đầu tiên |
+| `ADMIN_PASSWORD` | ✅ | Mật khẩu admin đầu tiên (≥ 12 ký tự). Bỏ trống ⇒ **không** seed admin nào |
+| `ADMIN_NAME` | ✅ | Tên hiển thị của admin |
+| `SITE_URL` | ✅ | Tên miền thật, vd `https://anonyht.com` |
+| `PORT` / `HOST` | — | Mặc định `3000` / `127.0.0.1` |
+| `SMTP_USER`, `SMTP_APP_PASSWORD` | — | Chỉ cần nếu gửi email (OTP, thông báo bài mới); để trống thì tắt |
+| `GOOGLE_*`, `GITHUB_*` | — | Chỉ cần nếu bật đăng nhập OAuth; để trống thì tắt |
+
+> ⚠️ **Không bao giờ commit file `.env`** (đã nằm trong `.gitignore`) — nó chứa secret. Chỉ commit `.env.example`.
+> Chi tiết ràng buộc bảo mật của `.env`: xem mục [Về `.env`](#về-env--bắt-buộc-không-còn-giá-trị-mặc-định) phía dưới.
+
+> 📦 Repo này là **mã nguồn**, không kèm bài viết/ảnh. Build từ repo ⇒ blog **trống** (chỉ có admin). Muốn khôi phục nội dung thật, chép đè `data/blog.db` và `public/uploads/` từ bản backup trước khi `npm start`.
 
 ## Vai trò người dùng
 
